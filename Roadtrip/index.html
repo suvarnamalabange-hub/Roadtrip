@@ -60,6 +60,24 @@
             100% { transform: rotate(360deg); }
         }
 
+        .navbar {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 32px;
+            font-weight: 600;
+        }
+        .navbar a:last-child {
+            margin-right: 0;
+        }
+
         /* --- Header & Hero Section with Video Background --- */
         .hero {
             height: 100vh;
@@ -470,6 +488,17 @@
 </head>
 <body>
     <div id="preloader"><div class="spinner"></div></div>
+    <nav class="navbar">
+    <div><i class="fas fa-route"></i> <b>Epic Roadtrip</b></div>
+    <div>
+        <a href="index.html">Home</a>
+        <a href="photo-gallery.html">Photo Gallery</a>
+        <a href="blog.html">Blog</a>
+        <a href="cuisine.html">Cuisine</a>
+        <a href="emergency.html">Emergency</a>
+    </div>
+    </nav>
+
     
     <header class="hero">
         <!-- Video Background -->
@@ -495,7 +524,7 @@
         <!-- Hero content -->
         <div class="hero-content">
             <h1>My Epic Roadtrip</h1>
-            <p>An unforgettable journey through the heart of India, from the majestic Himalayas to sacred riverbanks, covering 9,000+ km of diverse landscapes and spiritual destinations.</p>
+            <p>An unforgettable journey through the heart of India, from the majestic Himalayas to sacred riverbanks, covering 9,000+ km of diverse landscapes and spiritual destinations. Let me take you to this amazing experience.</p>
         </div>
         
         <!-- Scroll indicator -->

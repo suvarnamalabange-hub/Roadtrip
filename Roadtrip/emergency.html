@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emergency Resources | My Epic Roadtrip: India Edition 2.0</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+    :root {
+        --primary-color: #113b23;
+        --secondary-color: #2a633f;
+        --accent-color: #d4a373;
+        --bg-color: #fdfaf6;
+        --text-color: #333;
+        --card-bg: #ffffff;
+        --shadow-light: rgba(32, 40, 60, 0.12);
+        --shadow-dark: rgba(32, 40, 60, 0.2);
+        --emergency-red: #dc3545;
+        --warning-orange: #fd7e14;
+        --success-green: #28a745;
+    }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+    }
+    .navbar {
+        background: var(--primary-color);
+        color: #fff;
+        padding: 16px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .navbar a {
+        color: #fff;
+        text-decoration: none;
+        margin-right: 32px;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+    .navbar a:hover {
+        color: var(--accent-color);
+    }
+    .navbar a:last-child {
+        margin-right: 0;
+    }
+    .main-content {
+        max-width: 1200px;
+        margin: 40px auto 0 auto;
+        padding: 24px;
+    }
+    h2.section-title {
+        font-family: 'Playfair Display', serif;
+        text-align: center;
+        font-size: 2.5em;
+        color: var(--emergency-red);
+        margin-bottom: 30px;
+    }
+    .intro-text {
+        text-align: center;
+        font-size: 1.1em;
+        color: var(--secondary-color);
+        margin-bottom: 40px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 5px solid var(--warning-orange);
+    }
+    
+    /* Emergency Numbers Section */
+    .emergency-numbers {
+        background: var(--emergency-red);
+        color: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 20px var(--shadow-dark);
+    }
+    .emergency-title {
+        font-size: 1.8em;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    .numbers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    .number-card {
+        background: rgba(255,255,255,0.1);
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        border: 2px solid rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+    }
+    .number-icon {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        color: #fff;
+    }
+    .number-title {
+        font-weight: bold;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+    .number-value {
+        font-size: 1.5em;
+        font-weight: bold;
+        letter-spacing: 2px;
+        background: rgba(255,255,255,0.2);
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .number-value:hover {
+        background: rgba(255,255,255,0.3);
+    }
+    
+    /* State-wise Emergency Contacts */
+    .state-contacts {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+    .state-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        box-shadow: 0 4px 20px var(--shadow-light);
+        overflow: hidden;
+    }
+    .state-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+    .state-name {
+        font-size: 1.4em;
+        font-weight: bold;
+    }
+    .contact-list {
+        padding: 20px;
+    }
+    .contact-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .contact-item:last-child {
+        border-bottom: none;
+    }
+    .contact-label {
+        font-weight: 600;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .contact-number {
+        font-weight: bold;
+        color: var(--emergency-red);
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+    .contact-number:hover {
+        background: #f8f9fa;
+    }
+    
+    /* Quick Actions */
+    .quick-actions {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 20px var(--shadow-light);
+    }
+    .actions-title {
+        color: var(--primary-color);
+        font-size: 1.8em;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    .action-item {
+        text-align: center;
+        padding: 20px;
+        border: 2px solid #f0f0f0;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .action-item:hover {
+        border-color: var(--accent-color);
+        background: #f8f9fa;
+    }
+    .action-icon {
+        font-size: 2.5em;
+        color: var(--accent-color);
+        margin-bottom: 15px;
+    }
+    .action-title {
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 8px;
+    }
+    .action-desc {
+        font-size: 0.9em;
+        color: #666;
+    }
+    
+    /* Medical Emergency Guide */
+    .medical-guide {
+        background: var(--success-green);
+        color: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 20px var(--shadow-dark);
+    }
+    .guide-title {
+        font-size: 1.8em;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    .guide-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    .guide-step {
+        background: rgba(255,255,255,0.1);
+        padding: 20px;
+        border-radius: 15px;
+        border-left: 5px solid white;
+    }
+    .step-number {
+        background: white;
+        color: var(--success-green);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    .step-title {
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    .step-desc {
+        font-size: 0.9em;
+        opacity: 0.9;
+    }
+    
+    /* Important Documents */
+    .documents-section {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 20px var(--shadow-light);
+    }
+    .documents-title {
+        color: var(--primary-color);
+        font-size: 1.8em;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    .documents-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+    }
+    .document-category {
+        border: 2px solid var(--accent-color);
+        border-radius: 15px;
+        padding: 20px;
+    }
+    .category-title {
+        font-weight: bold;
+        color: var(--secondary-color);
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .document-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .document-item {
+        padding: 8px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #666;
+    }
+    .document-item i {
+        color: var(--success-green);
+    }
+    
+    footer {
+        text-align: center;
+        padding: 20px;
+        margin-top: 40px;
+        background: var(--primary-color);
+        color: #eee;
+    }
+    
+    @media (max-width: 768px) {
+        .main-content { padding: 15px; }
+        .numbers-grid, .state-contacts, .actions-grid, .guide-steps, .documents-grid { gap: 15px; }
+        .navbar { flex-direction: column; gap: 10px; }
+        .number-value { font-size: 1.2em; }
+    }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div><i class="fas fa-route"></i> <b>Epic Roadtrip</b></div>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="photo-gallery.html">Photo Gallery</a>
+            <a href="blog.html">Blog</a>
+            <a href="cuisine.html">Cuisine</a>
+            <a href="emergency.html">Emergency</a>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <h2 class="section-title"><i class="fas fa-exclamation-triangle"></i> Emergency Resources</h2>
+        <div class="intro-text">
+            <strong>⚠️ Important:</strong> Save these numbers offline before starting your trip. In remote areas like Ladakh, network connectivity can be limited. Always inform someone about your travel plans and expected arrival times.
+        </div>
+        
+        <!-- National Emergency Numbers -->
+        <section class="emergency-numbers">
+            <h3 class="emergency-title">
+                <i class="fas fa-phone-alt"></i>
+                National Emergency Numbers
+            </h3>
+            <div class="numbers-grid">
+                <div class="number-card" onclick="callNumber('112')">
+                    <div class="number-icon"><i class="fas fa-ambulance"></i></div>
+                    <div class="number-title">Emergency Services</div>
+                    <div class="number-value">112</div>
+                </div>
+                <div class="number-card" onclick="callNumber('100')">
+                    <div class="number-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="number-title">Police</div>
+                    <div class="number-value">100</div>
+                </div>
+                <div class="number-card" onclick="callNumber('101')">
+                    <div class="number-icon"><i class="fas fa-fire"></i></div>
+                    <div class="number-title">Fire Department</div>
+                    <div class="number-value">101</div>
+                </div>
+                <div class="number-card" onclick="callNumber('108')">
+                    <div class="number-icon"><i class="fas fa-heartbeat"></i></div>
+                    <div class="number-title">Ambulance</div>
+                    <div class="number-value">108</div>
+                </div>
+                <div class="number-card" onclick="callNumber('1073')">
+                    <div class="number-icon"><i class="fas fa-road"></i></div>
+                    <div class="number-title">Highway Helpline</div>
+                    <div class="number-value">1073</div>
+                </div>
+                <div class="number-card" onclick="callNumber('1098')">
+                    <div class="number-icon"><i class="fas fa-child"></i></div>
+                    <div class="number-title">Child Helpline</div>
+                    <div class="number-value">1098</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- State-wise Emergency Contacts -->
+        <section>
+            <h3 style="text-align: center; color: var(--primary-color); margin-bottom: 30px; font-size: 1.8em;">
+                <i class="fas fa-map-marked-alt"></i> State-wise Emergency Contacts
+            </h3>
+            <div class="state-contacts">
+                <div class="state-card">
+                    <div class="state-header">
+                        <div class="state-name">Maharashtra (Latur)</div>
+                    </div>
+                    <div class="contact-list">
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-hospital"></i> District Hospital</span>
+                            <span class="contact-number" onclick="callNumber('02382-250101')">02382-250101</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-shield-alt"></i> Police Control</span>
+                            <span class="contact-number" onclick="callNumber('02382-250100')">02382-250100</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-tools"></i> Road Helpline</span>
+                            <span class="contact-number" onclick="callNumber('1033')">1033</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="state-card">
+                    <div class="state-header">
+                        <div class="state-name">Himachal Pradesh</div>
+                    </div>
+                    <div class="contact-list">
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-mountain"></i> Tourism Helpline</span>
+                            <span class="contact-number" onclick="callNumber('0177-2623531')">0177-2623531</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-hospital"></i> Manali Hospital</span>
+                            <span class="contact-number" onclick="callNumber('01902-252053')">01902-252053</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-snowflake"></i> Weather Info</span>
+                            <span class="contact-number" onclick="callNumber('01902-252108')">01902-252108</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="state-card">
+                    <div class="state-header">
+                        <div class="state-name">Ladakh UT</div>
+                    </div>
+                    <div class="contact-list">
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-hospital"></i> SNM Hospital Leh</span>
+                            <span class="contact-number" onclick="callNumber('01982-252014')">01982-252014</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-shield-alt"></i> Leh Police</span>
+                            <span class="contact-number" onclick="callNumber('01982-252018')">01982-252018</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-mountain"></i> Tourist Helpline</span>
+                            <span class="contact-number" onclick="callNumber('01982-257462')">01982-257462</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="state-card">
+                    <div class="state-header">
+                        <div class="state-name">Uttarakhand</div>
+                    </div>
+                    <div class="contact-list">
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-hospital"></i> Rishikesh AIIMS</span>
+                            <span class="contact-number" onclick="callNumber('0135-2462042')">0135-2462042</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-mountain"></i> Kedarnath Helpline</span>
+                            <span class="contact-number" onclick="callNumber('0135-2710334')">0135-2710334</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-exclamation-triangle"></i> Disaster Helpline</span>
+                            <span class="contact-number" onclick="callNumber('1070')">1070</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="state-card">
+                    <div class="state-header">
+                        <div class="state-name">Uttar Pradesh</div>
+                    </div>
+                    <div class="contact-list">
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-hospital"></i> Varanasi BHU</span>
+                            <span class="contact-number" onclick="callNumber('0542-2369444')">0542-2369444</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-shield-alt"></i> Tourist Police</span>
+                            <span class="contact-number" onclick="callNumber('1090')">1090</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-road"></i> Highway Patrol</span>
+                            <span class="contact-number" onclick="callNumber('1073')">1073</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="state-card">
+                    <div class="state-header">
+                        <div class="state-name">Bihar (Gaya)</div>
+                    </div>
+                    <div class="contact-list">
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-hospital"></i> Anugrah Hospital</span>
+                            <span class="contact-number" onclick="callNumber('0631-2301234')">0631-2301234</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-shield-alt"></i> Police Control</span>
+                            <span class="contact-number" onclick="callNumber('0631-2222100')">0631-2222100</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-label"><i class="fas fa-place-of-worship"></i> Tourist Helpline</span>
+                            <span class="contact-number" onclick="callNumber('0631-2200694')">0631-2200694</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <h3 class="actions-title">
+                <i class="fas fa-bolt"></i>
+                Quick Emergency Actions
+            </h3>
+            <div class="actions-grid">
+                <div class="action-item" onclick="shareLocation()">
+                    <div class="action-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="action-title">Share Location</div>
+                    <div class="action-desc">Send your GPS coordinates to emergency contacts</div>
+                </div>
+                <div class="action-item" onclick="sendSOSMessage()">
+                    <div class="action-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="action-title">Send SOS Message</div>
+                    <div class="action-desc">Quick message to predefined emergency contacts</div>
+                </div>
+                <div class="action-item" onclick="findNearestHospital()">
+                    <div class="action-icon"><i class="fas fa-hospital"></i></div>
+                    <div class="action-title">Find Hospital</div>
+                    <div class="action-desc">Locate nearest medical facility</div>
+                </div>
+                <div class="action-item" onclick="findPoliceStation()">
+                    <div class="action-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="action-title">Find Police Station</div>
+                    <div class="action-desc">Locate nearest police station</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Medical Emergency Guide -->
+        <section class="medical-guide">
+            <h3 class="guide-title">
+                <i class="fas fa-first-aid"></i>
+                Medical Emergency Steps
+            </h3>
+            <div class="guide-steps">
+                <div class="guide-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Stay Calm</div>
+                    <div class="step-desc">Take deep breaths. Panic can worsen the situation.</div>
+                </div>
+                <div class="guide-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Call 108/112</div>
+                    <div class="step-desc">Immediately call ambulance services with exact location.</div>
+                </div>
+                <div class="guide-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Provide First Aid</div>
+                    <div class="step-desc">Only if trained. Otherwise, wait for professional help.</div>
+                </div>
+                <div class="guide-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Contact Family</div>
+                    <div class="step-desc">Inform emergency contacts about the situation.</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Important Documents -->
+        <section class="documents-section">
+            <h3 class="documents-title">
+                <i class="fas fa-folder-open"></i>
+                Essential Documents Checklist
+            </h3>
+            <div class="documents-grid">
+                <div class="document-category">
+                    <div class="category-title">
+                        <i class="fas fa-id-card"></i>
+                        Identity Documents
+                    </div>
+                    <ul class="document-list">
+                        <li class="document-item"><i class="fas fa-check"></i> Aadhaar Card (Physical + Digital)</li>
+                        <li class="document-item"><i class="fas fa-check"></i> Driving License</li>
+                        <li class="document-item"><i class="fas fa-check"></i> Passport (if available)</li>
+                        <li class="document-item"><i class="fas fa-check"></i> Voter ID Card</li>
+                    </ul>
+                </div>
+                <div class="document-category">
+                    <div class="category-title">
+                        <i class="fas fa-car"></i>
+                        Vehicle Documents
+                    </div>
+                    <ul class="document-list">
+                        <li class="document-item"><i class="fas fa-check"></i> Registration Certificate (RC)</li>
+                        <li class="document-item"><i class="fas fa-check"></i> Insurance Certificate</li>
+                        <li class="document-item"><i class="fas fa-check"></i> PUC Certificate</li>
+                        <li class="document-item"><i class="fas fa-check"></i> Fitness Certificate</li>
+                    </ul>
+                </div>
+                <div class="document-category">
+                    <div class="category-title">
+                        <i class="fas fa-heartbeat"></i>
+                        Medical Documents
+                    </div>
+                    <ul class="document-list">
+                        <li class="document-item"><i class="fas fa-check"></i> Health Insurance Card</li>
+                        <li class="document-item"><i class="fas fa-check"></i> Blood Group Certificate</li>
+                        <li class="document-item"><i class="fas fa-check"></i> Prescription Medicines List</li>
+                        <li class="document-item"><i class="fas fa-check"></i> Emergency Contact Details</li>
+                    </ul>
+                </div>
+                <div class="document-category">
+                    <div class="category-title">
+                        <i class="fas fa-mountain"></i>
+                        Travel Permits
+                    </div>
+                    <ul class="document-list">
+                        <li class="document-item"><i class="fas fa-check"></i> Inner Line Permit (Ladakh)</li>
+                        <li class="document-item"><i class="fas fa-check"></i> Environment Fee Receipt</li>
+                        <li class="document-item"><i class="fas fa-check"></i> Hotel Booking Confirmations</li>
+                        <li class="document-item"><i class="fas fa-check"></i> Travel Insurance</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        &copy; 2025 Epic Roadtrips Inc. | Stay Safe, Travel Smart!
+    </footer>
+    
+    <script>
+    // Call emergency number
+    function callNumber(number) {
+        if (confirm(`Call ${number}?`)) {
+            window.location.href = `tel:${number}`;
+        }
+    }
+    
+    // Share current location
+    function shareLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const locationText = `Emergency! My location: https://maps.google.com/?q=${lat},${lon}`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Emergency Location',
+                        text: locationText
+                    });
+                } else {
+                    // Fallback: copy to clipboard
+                    navigator.clipboard.writeText(locationText).then(() => {
+                        alert('Location copied to clipboard! Share it with emergency contacts.');
+                    });
+                }
+            }, function(error) {
+                alert('Unable to get location. Please check GPS settings.');
+            });
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
+    }
+    
+    // Send SOS message
+    function sendSOSMessage() {
+        const message = "🆘 EMERGENCY! I need immediate help. Please contact local authorities and track my location.";
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'SOS Emergency',
+                text: message
+            });
+        } else {
+            // Fallback: copy to clipboard
+            navigator.clipboard.writeText(message).then(() => {
+                alert('SOS message copied! Send to emergency contacts via WhatsApp/SMS.');
+            });
+        }
+    }
+    
+    // Find nearest hospital
+    function findNearestHospital() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const url = `https://www.google.com/maps/search/hospital+near+me/@${lat},${lon},15z`;
+                window.open(url, '_blank');
+            }, function(error) {
+                // Fallback: general search
+                window.open('https://www.google.com/maps/search/hospital+near+me', '_blank');
+            });
+        } else {
+            window.open('https://www.google.com/maps/search/hospital+near+me', '_blank');
+        }
+    }
+    
+    // Find nearest police station
+    function findPoliceStation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const url = `https://www.google.com/maps/search/police+station+near+me/@${lat},${lon},15z`;
+                window.open(url, '_blank');
+            }, function(error) {
+                // Fallback: general search
+                window.open('https://www.google.com/maps/search/police+station+near+me', '_blank');
+            });
+        } else {
+            window.open('https://www.google.com/maps/search/police+station+near+me', '_blank');
+        }
+    }
+    
+    // Add keyboard shortcuts for emergency actions
+    document.addEventListener('keydown', function(event) {
+        // Ctrl + E for emergency call
+        if (event.ctrlKey && event.key === 'e') {
+            event.preventDefault();
+            callNumber('112');
+        }
+        // Ctrl + L for location sharing
+        if (event.ctrlKey && event.key === 'l') {
+            event.preventDefault();
+            shareLocation();
+        }
+    });
+    </script>
+</body>
+</html>

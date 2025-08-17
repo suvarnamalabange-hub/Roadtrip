@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Photo Gallery | My Epic Roadtrip: India Edition 2.0</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+    :root {
+        --primary-color: #113b23;
+        --secondary-color: #2a633f;
+        --accent-color: #d4a373;
+        --bg-color: #fdfaf6;
+        --text-color: #333;
+        --card-bg: #ffffff;
+        --shadow-light: rgba(32, 40, 60, 0.12);
+        --shadow-dark: rgba(32, 40, 60, 0.2);
+    }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+    }
+    .navbar {
+        background: var(--primary-color);
+        color: #fff;
+        padding: 16px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .navbar a {
+        color: #fff;
+        text-decoration: none;
+        margin-right: 32px;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+    .navbar a:hover {
+        color: var(--accent-color);
+    }
+    .navbar a:last-child {
+        margin-right: 0;
+    }
+    .main-content {
+        max-width: 1100px;
+        margin: 40px auto 0 auto;
+        padding: 24px;
+    }
+    h2.section-title {
+        font-family: 'Playfair Display', serif;
+        text-align: center;
+        font-size: 2.5em;
+        color: var(--primary-color);
+        margin-bottom: 30px;
+    }
+    
+    /* Destination Cards Grid */
+    .destinations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+    
+    /* Individual Destination Card */
+    .destination-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        box-shadow: 0 4px 20px var(--shadow-light);
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .destination-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 32px var(--shadow-dark);
+    }
+    
+    .destination-cover {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+    }
+    
+    .destination-info {
+        padding: 20px;
+        text-align: center;
+    }
+    
+    .destination-name {
+        font-size: 1.4em;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 8px;
+    }
+    
+    .destination-state {
+        color: var(--secondary-color);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    .photo-count {
+        background: var(--accent-color);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9em;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    /* Gallery Modal */
+    .gallery-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.9);
+        z-index: 1000;
+        overflow-y: auto;
+    }
+    
+    .gallery-modal.active {
+        display: block;
+    }
+    
+    .gallery-content {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 20px;
+        position: relative;
+    }
+    
+    .gallery-header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+    }
+    
+    .gallery-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.2em;
+        margin-bottom: 10px;
+    }
+    
+    .close-gallery {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 2em;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 50%;
+        transition: background 0.3s;
+    }
+    
+    .close-gallery:hover {
+        background: rgba(255,255,255,0.2);
+    }
+    
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .gallery-item {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        cursor: pointer;
+    }
+    
+    .gallery-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    .gallery-img:hover {
+        transform: scale(1.05);
+    }
+    
+    .gallery-caption {
+        padding: 15px;
+        text-align: center;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+    
+    /* Fullscreen Image Modal */
+    .fullscreen-modal {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.95);
+        z-index: 1100;
+        justify-content: center;
+        align-items: center;
+        cursor: zoom-out;
+        overflow: hidden;
+    }
+    .fullscreen-modal.active {
+        display: flex;
+    }
+    
+    .fullscreen-img {
+        max-width: 90vw;
+        max-height: 90vh;
+        border-radius: 12px;
+        box-shadow: 0 0 40px rgba(255,255,255,0.8);
+        animation: fadeInZoom 0.4s ease;
+    }
+    
+    @keyframes fadeInZoom {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    footer {
+        text-align: center;
+        padding: 20px;
+        margin-top: 40px;
+        background: var(--primary-color);
+        color: #eee;
+    }
+    
+    @media (max-width: 768px) {
+        .main-content { padding: 15px; }
+        .destinations-grid { gap: 20px; }
+        .navbar { flex-direction: column; gap: 10px; }
+        .gallery-content { margin: 20px auto; padding: 10px; }
+    }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div><i class="fas fa-route"></i> <b>Epic Roadtrip</b></div>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="photo-gallery.html">Photo Gallery</a>
+            <a href="blog.html">Blog</a>
+            <a href="cuisine.html">Cuisine</a>
+            <a href="emergency.html">Emergency</a>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <h2 class="section-title"><i class="fas fa-camera-retro"></i> Photo Gallery</h2>
+        
+        <div class="destinations-grid" id="destinationsGrid">
+            <!-- Destination cards dynamically added here -->
+        </div>
+    </main>
+    
+    <!-- Gallery Modal -->
+    <div class="gallery-modal" id="galleryModal">
+        <div class="gallery-content">
+            <button class="close-gallery" onclick="closeGallery()">&times;</button>
+            <div class="gallery-header">
+                <h2 class="gallery-title" id="galleryTitle"></h2>
+                <p id="gallerySubtitle"></p>
+            </div>
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Gallery images dynamically added here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Fullscreen Image Modal -->
+    <div class="fullscreen-modal" id="fullscreenModal" onclick="closeFullscreen()">
+        <img src="" alt="" class="fullscreen-img" id="fullscreenImg">
+    </div>
+    
+    <footer>
+        &copy; 2025 Epic Roadtrips Inc. | Adventure Awaits!
+    </footer>
+    
+    <script>
+    const destinations = [
+        {
+            name: "Manali",
+            state: "Himachal Pradesh",
+            coverImage: "https://t3.ftcdn.net/jpg/01/95/88/12/360_F_195881213_oJTdvdKp1g5vzyt8XJ7o4GYKnAD8Q0o4.jpg",
+            images: [
+                { url: "https://images.unsplash.com/photo-1616942986550-ea6469c08530?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", caption: "Solang Valley Views" },
+                { url: "https://images.unsplash.com/photo-1574632430946-82add0b76816?q=80&w=2125&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", caption: "Rohtang Pass Snow" },
+                { url: "https://images.unsplash.com/photo-1516406742981-2b7d67ec4ae8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", caption: "Old Manali Streets" },
+                { url: "https://images.unsplash.com/photo-1655470062196-c37e923fc4c1?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", caption: "Hadimba Temple" },
+                { url: "https://images.unsplash.com/photo-1712388430474-ace0c16051e2?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", caption: "Mountain Adventure" }
+            ]
+        },
+        {
+            name: "Ladakh",
+            state: "Ladakh UT",
+            coverImage: "https://www.urbanyatra.com/wp-content/uploads/2024/08/HD-wallpaper-mountain-reflection-ladakh-birds-beautiful-clouds-lake-india-mountains-prairie-reflection-field-himalayas.jpg",
+            images: [
+                { url: "https://plus.unsplash.com/premium_photo-1697730113415-b33b83fe77c4?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", caption: "Pangong Lake" },
+                { url: "https://images.unsplash.com/photo-1695954590938-ec7aa19efd5d?q=80&w=1631&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", caption: "Buddhist Monastery" },
+                { url: "https://images.unsplash.com/photo-1573106341805-7db29def6c9d?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", caption: "High Altitude Desert" },
+                { url: "https://media.istockphoto.com/id/530741376/photo/leh-palace-ladakh-india.jpg?s=612x612&w=0&k=20&c=dX6hfOFHgd2DxJdBkBuQ_VgyL_LKZOZQ1FmWYDgJ14E=", caption: "Leh Palace" }
+            ]
+        },
+        {
+            name: "Rishikesh",
+            state: "Uttarakhand",
+            coverImage: "https://t3.ftcdn.net/jpg/04/54/95/42/360_F_454954235_UNfPLwwOIvzOPaCJ6W9MF1KAtdNkdAnM.jpg",
+            images: [
+                { url: "https://rishikeshdaytour.com/blog/wp-content/uploads/2022/01/Triveni-Ghat-in-Rishikesh-Uttarakhand.jpg", caption: "Triveni Ghat" },
+                { url: "https://t4.ftcdn.net/jpg/03/32/64/97/360_F_332649776_yrTjVMhROD5yRD18hL47i2iHxHhUGhI5.jpg", caption: "Laxman Jhula" },
+                { url: "https://media1.thrillophilia.com/filestore/pf3hv3jqvrjtt5rotnpr3v6a6y2d_1575268796_shutterstock_1136356946.jpg", caption: "Ram Jhula" },
+                { url: "https://visitplacesindia.com/wp-content/uploads/2025/01/ganga-aarti.jpg", caption: "Ganga Aarti" }
+            ]
+        },
+        {
+            name: "Varanasi",
+            state: "Uttar Pradesh",
+            coverImage: "https://t4.ftcdn.net/jpg/00/14/92/13/360_F_14921374_cxnqH33QN7vKSTDyvrNZRCHqyWXiBBWd.jpg",
+            images: [
+                { url: "https://media.istockphoto.com/id/1197915186/photo/hindu-pandits-of-varanasi-perform-the-ganga-aarti-ritual-to-worship-holy-river-ganga.jpg?s=612x612&w=0&k=20&c=qD_LRPMN0qUgGwTAds3JSRrJgy6Vj1PY4hfgRH3k3G0=", caption: "Dashashwamedh Ghat" },
+                { url: "https://farm2.staticflickr.com/1650/25417469265_89b15eeb1d_c.jpg", caption: "Morning Boat Ride" },
+                { url: "https://media.assettype.com/deccanherald%2Fimport%2Fsites%2Fdh%2Ffiles%2Fgallery_images%2F2021%2F12%2F13%2Ffile7it39sqcijbouyq81z6.jpg?w=undefined&auto=format%2Ccompress&fit=max", caption: "Kashi Vishwanath Temple" },
+                { url: "https://kashiyatra.in/wp-content/uploads/2024/03/evening-assi-ghat-stairs-768x576.jpg", caption: "Assi Ghat" }
+            ]
+        }
+    ];
+    
+    // Render destination cards
+    function renderDestinations() {
+        const grid = document.getElementById('destinationsGrid');
+        
+        destinations.forEach((dest, index) => {
+            const card = document.createElement('div');
+            card.className = 'destination-card';
+            card.onclick = () => openGallery(index);
+            
+            card.innerHTML = `
+                <img src="${dest.coverImage}" alt="${dest.name}" class="destination-cover">
+                <div class="destination-info">
+                    <div class="destination-name">${dest.name}</div>
+                    <div class="destination-state">
+                        <i class="fas fa-map-marker-alt"></i>
+                        ${dest.state}
+                    </div>
+                    <div class="photo-count">
+                        <i class="fas fa-images"></i>
+                        ${dest.images.length} Photos
+                    </div>
+                </div>
+            `;
+            
+            grid.appendChild(card);
+        });
+    }
+    
+    // Open gallery for specific destination
+    function openGallery(destIndex) {
+        const dest = destinations[destIndex];
+        const modal = document.getElementById('galleryModal');
+        const title = document.getElementById('galleryTitle');
+        const subtitle = document.getElementById('gallerySubtitle');
+        const grid = document.getElementById('galleryGrid');
+        
+        // Set title and subtitle
+        title.textContent = dest.name;
+        subtitle.textContent = dest.state;
+        
+        // Clear and populate gallery grid
+        grid.innerHTML = '';
+        dest.images.forEach((img, idx) => {
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.innerHTML = `
+                <img src="${img.url}" alt="${img.caption}" class="gallery-img" data-index="${idx}">
+                <div class="gallery-caption">${img.caption}</div>
+            `;
+            // Open fullscreen image modal on clicking a gallery image
+            item.querySelector('img').addEventListener('click', () => openFullscreen(destIndex, idx));
+            grid.appendChild(item);
+        });
+        
+        // Show modal
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Close gallery modal
+    function closeGallery() {
+        const modal = document.getElementById('galleryModal');
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        closeFullscreen(); // also close fullscreen if open
+    }
+    
+    // Open fullscreen modal for a selected image
+    function openFullscreen(destIndex, imgIndex) {
+        const fullscreenModal = document.getElementById('fullscreenModal');
+        const fullscreenImg = document.getElementById('fullscreenImg');
+        
+        let img = destinations[destIndex].images[imgIndex];
+        fullscreenImg.src = img.url;
+        fullscreenImg.alt = img.caption;
+        fullscreenModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Close fullscreen modal
+    function closeFullscreen() {
+        const fullscreenModal = document.getElementById('fullscreenModal');
+        fullscreenModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+    
+    // Close fullscreen modal when clicking outside image
+    document.getElementById('fullscreenModal').addEventListener('click', (e) => {
+        if (e.target.id === 'fullscreenModal') {
+            closeFullscreen();
+        }
+    });
+    
+    // Close gallery modal when clicking outside content
+    document.getElementById('galleryModal').addEventListener('click', (e) => {
+        if (e.target.id === 'galleryModal') {
+            closeGallery();
+        }
+    });
+    
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+        renderDestinations();
+    });
+    </script>
+</body>
+</html>

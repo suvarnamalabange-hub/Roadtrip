@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Local Cuisine Guide | My Epic Roadtrip: India Edition 2.0</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+    :root {
+        --primary-color: #113b23;
+        --secondary-color: #2a633f;
+        --accent-color: #d4a373;
+        --bg-color: #fdfaf6;
+        --text-color: #333;
+        --card-bg: #ffffff;
+        --shadow-light: rgba(32, 40, 60, 0.12);
+        --shadow-dark: rgba(32, 40, 60, 0.2);
+    }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+    }
+    .navbar {
+        background: var(--primary-color);
+        color: #fff;
+        padding: 16px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .navbar a {
+        color: #fff;
+        text-decoration: none;
+        margin-right: 32px;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+    .navbar a:hover {
+        color: var(--accent-color);
+    }
+    .navbar a:last-child {
+        margin-right: 0;
+    }
+    .main-content {
+        max-width: 1200px;
+        margin: 40px auto 0 auto;
+        padding: 24px;
+    }
+    h2.section-title {
+        font-family: 'Playfair Display', serif;
+        text-align: center;
+        font-size: 2.5em;
+        color: var(--primary-color);
+        margin-bottom: 30px;
+    }
+    .intro-text {
+        text-align: center;
+        font-size: 1.1em;
+        color: var(--secondary-color);
+        margin-bottom: 40px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    /* Cuisine Categories Filter */
+    .filter-section {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    .filter-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+    }
+    .filter-btn {
+        background: #fff;
+        border: 2px solid var(--secondary-color);
+        color: var(--secondary-color);
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .filter-btn.active, .filter-btn:hover {
+        background: var(--secondary-color);
+        color: white;
+    }
+    
+    /* Destination Food Cards */
+    .destinations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+    
+    .destination-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        box-shadow: 0 4px 20px var(--shadow-light);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .destination-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 32px var(--shadow-dark);
+    }
+    
+    .destination-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+    .destination-name {
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .destination-state {
+        opacity: 0.9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    .food-items {
+        padding: 20px;
+    }
+    .food-item {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        border-left: 4px solid var(--accent-color);
+    }
+    .food-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .food-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 10px;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+    
+    .food-details {
+        flex: 1;
+    }
+    .food-name {
+        font-weight: bold;
+        color: var(--primary-color);
+        font-size: 1.1em;
+        margin-bottom: 5px;
+    }
+    .food-description {
+        color: #666;
+        font-size: 0.95em;
+        line-height: 1.4;
+        margin-bottom: 8px;
+    }
+    .food-price {
+        color: var(--accent-color);
+        font-weight: 600;
+        font-size: 0.9em;
+    }
+    
+    /* Must-Try Section */
+    .must-try-section {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 30px;
+        margin: 40px 0;
+        box-shadow: 0 4px 20px var(--shadow-light);
+    }
+    .must-try-title {
+        color: var(--primary-color);
+        font-size: 1.8em;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    .must-try-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    .must-try-item {
+        text-align: center;
+        padding: 20px;
+        border: 2px solid #f0f0f0;
+        border-radius: 15px;
+        transition: border-color 0.3s;
+    }
+    .must-try-item:hover {
+        border-color: var(--accent-color);
+    }
+    .must-try-icon {
+        font-size: 2.5em;
+        color: var(--accent-color);
+        margin-bottom: 15px;
+    }
+    .must-try-name {
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 8px;
+    }
+    .must-try-desc {
+        font-size: 0.9em;
+        color: #666;
+    }
+    
+    footer {
+        text-align: center;
+        padding: 20px;
+        margin-top: 40px;
+        background: var(--primary-color);
+        color: #eee;
+    }
+    
+    @media (max-width: 768px) {
+        .main-content { padding: 15px; }
+        .destinations-grid { gap: 20px; }
+        .navbar { flex-direction: column; gap: 10px; }
+        .filter-buttons { gap: 8px; }
+        .food-item { flex-direction: column; text-align: center; }
+        .food-image { width: 100%; height: 150px; }
+    }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div><i class="fas fa-route"></i> <b>Epic Roadtrip</b></div>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="photo-gallery.html">Photo Gallery</a>
+            <a href="blog.html">Blog</a>
+            <a href="cuisine.html">Cuisine</a>
+            <a href="emergency.html">Emergency</a>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <h2 class="section-title"><i class="fas fa-utensils"></i> Local Cuisine Guide</h2>
+        <p class="intro-text">
+            Discover the authentic flavors of India along your epic road trip. From mountain delicacies in Himachal to spiritual sweets in Varanasi, each destination offers unique culinary experiences that will make your journey unforgettable.
+        </p>
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Destinations</button>
+                <button class="filter-btn" data-filter="Mountains">Mountain Food</button>
+                <button class="filter-btn" data-filter="Spiritual">Temple Food</button>
+                <button class="filter-btn" data-filter="Street">Street Food</button>
+                <button class="filter-btn" data-filter="Traditional">Traditional</button>
+            </div>
+        </div>
+        
+        <!-- Destinations Food Grid -->
+        <div class="destinations-grid" id="destinationsGrid">
+            <!-- Dynamically populated by JavaScript -->
+        </div>
+        
+        <!-- Must-Try Foods Section -->
+        <section class="must-try-section">
+            <h3 class="must-try-title">
+                <i class="fas fa-star"></i>
+                Road Trip Food Essentials
+            </h3>
+            <div class="must-try-grid">
+                <div class="must-try-item">
+                    <div class="must-try-icon"><i class="fas fa-cookie-bite"></i></div>
+                    <div class="must-try-name">Local Sweets</div>
+                    <div class="must-try-desc">Try regional mithai at every destination - from Ladakhi chhurpi to Varanasi's malaiyo</div>
+                </div>
+                <div class="must-try-item">
+                    <div class="must-try-icon"><i class="fas fa-pepper-hot"></i></div>
+                    <div class="must-try-name">Spice Varieties</div>
+                    <div class="must-try-desc">Each region has unique spice blends - collect them as edible souvenirs</div>
+                </div>
+                <div class="must-try-item">
+                    <div class="must-try-name">Mountain Tea</div>
+                    <div class="must-try-icon"><i class="fas fa-mug-hot"></i></div>
+                    <div class="must-try-desc">From Kashmiri kahwa to Himalayan butter tea - warm drinks for cold nights</div>
+                </div>
+                <div class="must-try-item">
+                    <div class="must-try-icon"><i class="fas fa-bread-slice"></i></div>
+                    <div class="must-try-name">Fresh Bread</div>
+                    <div class="must-try-desc">Local breads like Tibetan tingmo and UP's baati-chokha tell regional stories</div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        &copy; 2025 Epic Roadtrips Inc. | Adventure Awaits!
+    </footer>
+    
+    <script>
+    const cuisineData = [
+        {
+            name: "Manali",
+            state: "Himachal Pradesh",
+            category: "Mountains",
+            foods: [
+                {
+                    name: "Siddu",
+                    image: "https://www.beingpahadia.com/wp-content/uploads/2020/06/65161657_386313105352421_7489683298599119918_n-1068x1321.jpg",
+                    description: "Traditional steamed bread stuffed with walnuts, poppy seeds, and local herbs. A mountain specialty.",
+                    price: "₹80-120"
+                },
+                {
+                    name: "Dham",
+                    image: "https://media.istockphoto.com/id/1421270219/photo/dham-traditional-food-of-himachal-pradesh-himachali-kangri-dham-thali-includes-kaddu-ka.jpg?s=612x612&w=0&k=20&c=VNPZ-8C40jSqYSBi38EtEdDtOjhK5gtcxkZosCF5pYc=",
+                    description: "Complete meal served on banana leaf with rice, rajma, curd, and local vegetables.",
+                    price: "₹150-200"
+                },
+                {
+                    name: "Tibetan Momos",
+                    image: "https://as1.ftcdn.net/jpg/05/64/61/50/1000_F_564615022_JjLhkY9abB9OgNuQ7qYqdvwb94XVeAQW.jpg",
+                    description: "Steamed dumplings filled with vegetables or meat, served with spicy chutney.",
+                    price: "₹100-150"
+                }
+            ]
+        },
+        {
+            name: "Ladakh",
+            state: "Ladakh UT",
+            category: "Mountains",
+            foods: [
+                {
+                    name: "Thukpa",
+                    image: "https://blog.untravel.com/wp-content/uploads/2018/04/How-to-make-vegan-thukpa-nepali-spicy-noodle-soup-2.jpg",
+                    description: "Hearty noodle soup with vegetables and meat, perfect for high-altitude energy.",
+                    price: "₹120-180"
+                },
+                {
+                    name: "Butter Tea (Po Cha)",
+                    image: "https://static.toiimg.com/photo/msid-53172083,width-96,height-65.cms",
+                    description: "Traditional Ladakhi tea made with yak butter and salt - an acquired taste!",
+                    price: "₹30-50"
+                },
+                {
+                    name: "Chhurpi",
+                    image: "https://therecipeart.com/wp-content/uploads/2022/11/chhurpi.jpg",
+                    description: "Dried yak cheese - a protein-rich snack perfect for trekking.",
+                    price: "₹200-300"
+                }
+            ]
+        },
+        {
+            name: "Rishikesh",
+            state: "Uttarakhand",
+            category: "Spiritual",
+            foods: [
+                {
+                    name: "Sattvic Thali",
+                    image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=100&q=80",
+                    description: "Pure vegetarian meal without onion/garlic, promoting spiritual well-being.",
+                    price: "₹120-200"
+                },
+                {
+                    name: "Aloo Ke Gutke",
+                    image: "https://www.whiskaffair.com/wp-content/uploads/2022/03/Aloo-ke-Gutke-2-3.jpg",
+                    description: "Spicy boiled potatoes with local pahadi spices - a mountain favorite.",
+                    price: "₹80-120"
+                },
+                {
+                    name: "Herbal Tea",
+                    image: "https://static.toiimg.com/photo/69385334.cms",
+                    description: "Fresh mountain herbs brewed into therapeutic teas at ashrams.",
+                    price: "₹40-80"
+                }
+            ]
+        },
+        {
+            name: "Varanasi",
+            state: "Uttar Pradesh",
+            category: "Street",
+            foods: [
+                {
+                    name: "Banarasi Paan",
+                    image: "https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/xws352vk9t7znlgx56bq",
+                    description: "Iconic betel leaf preparation with sweet fillings - a Varanasi signature.",
+                    price: "₹20-100"
+                },
+                {
+                    name: "Kachori Sabzi",
+                    image: "https://kashi.gov.in/cmsadmin/getApiFile/CMS/655ca2b0046e61700569776~jpg",
+                    description: "Crispy deep-fried bread served with spicy potato curry.",
+                    price: "₹30-60"
+                },
+                {
+                    name: "Malaiyo",
+                    image: "https://www.varanasiguru.com/wp-content/uploads/2018/02/photo6332363579675748345.jpg",
+                    description: "Winter delicacy - airy milk foam sweetened and garnished with nuts.",
+                    price: "₹50-80"
+                }
+            ]
+        },
+        {
+            name: "Vrindavan",
+            state: "Uttar Pradesh",
+            category: "Spiritual",
+            foods: [
+                {
+                    name: "Makhan Mishri",
+                    image: "https://www.livehindustan.com/lh-img/smart/img/2025/08/13/1200x900/fgr_1755069498417_1755069505571.jpg",
+                    description: "Fresh butter and sugar crystals - Krishna's favorite offering.",
+                    price: "₹40-80"
+                },
+                {
+                    name: "Mathura Ke Pede",
+                    image: "https://i.ytimg.com/vi/1qXIV-YoK-U/maxresdefault.jpg",
+                    description: "Famous milk-based sweets from the sacred land of Krishna.",
+                    price: "₹300-500/kg"
+                },
+                {
+                    name: "Temple Prasadam",
+                    image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=100&q=80",
+                    description: "Sacred food blessed in temples - varies daily but always satisfying.",
+                    price: "Donation based"
+                }
+            ]
+        },
+        {
+            name: "Ayodhya",
+            state: "Uttar Pradesh",
+            category: "Traditional",
+            foods: [
+                {
+                    name: "Ram Laddu",
+                    image: "https://c.ndtvimg.com/2024-01/bmg9s61g_besan-ladoo_625x300_10_January_24.jpg?im=FaceCrop,algorithm=dnn,width=1200,height=738",
+                    description: "Sweet balls made of gram flour and jaggery, offered to Lord Rama.",
+                    price: "₹200-300/kg"
+                },
+                {
+                    name: "Tehri",
+                    image: "https://media.assettype.com/outlooktraveller%2F2024-01%2F4227d505-f1cc-40d1-8cb2-d016240c4364%2Fshutterstock_2189386943.jpg?w=640&auto=format%2Ccompress",
+                    description: "Aromatic rice dish with mixed vegetables and traditional spices.",
+                    price: "₹80-120"
+                },
+                {
+                    name: "Kheer",
+                    image: "https://images.timesnownews.com/photo/msid-106904117/106904117.jpg",
+                    description: "Creamy rice pudding served in temples as sacred prasadam.",
+                    price: "₹60-100"
+                }
+            ]
+        },
+        {
+            name: "Prayagraj",
+            state: "Uttar Pradesh",
+            category: "Street",
+            foods: [
+                {
+                    name: "Petha",
+                    image: "https://5.imimg.com/data5/SELLER/Default/2021/3/GI/FJ/ED/23378445/petha.jpeg",
+                    description: "Juicy translucent sweet made from ash gourd, slow-cooked in syrup with mild flavors.",
+                    price: "₹100-150/kg"
+                },
+                {
+                    name: "Kachori",
+                    image: "https://newstrack.com/h-upload/2023/09/12/1570863-screen-shot-2023-09-12-at-120755.webp",
+                    description: "Flaky deep-fried kachoris served with spicy potato curry, a beloved street breakfast.",
+                    price: "₹40-70"
+                },
+                {
+                    name: "Dahi Bhalla",
+                    image: "https://sahasa.in/wp-content/uploads/2022/05/prayagraj-dahi-bhalla.jpg",
+                    description: "Soft lentil dumplings soaked in creamy yogurt, topped with tangy chutneys and spices.",
+                    price: "₹50-90"
+                }
+            ]
+        },
+        {
+            name: "Gaya",
+            state: "Bihar",
+            category: "Traditional",
+            foods: [
+                {
+                    name: "Litti Choka",
+                    image: "https://images.herzindagi.info/image/2022/Nov/top-places-to-eat-litti-chokha-in-bodh-gaya-bihar.jpg",
+                    description: "Wheat dough balls stuffed with spicy sattu, roasted and served with smoky brinjal-tomato-potato mash, topped with ghee.",
+                    price: "₹30-60"
+                },
+                {
+                    name: "Tilkut",
+                    image: "https://4.imimg.com/data4/QJ/CI/ANDROID-9264623/product-500x500.jpeg",
+                    description: "Gaya’s signature sweet of sesame seeds and jaggery/sugar, crunchy and warming, made especially during Makar Sankranti.",
+                    price: "₹100-120 per box"
+                },
+                {
+                    name: "Kadhi Bari",
+                    image: "https://pulses.org/images/com_yoorecipe/wgpd/Bihar_Kadhi_Bari-2508-Edit.jpg",
+                    description: "Tangy yogurt curry with fried gram flour dumplings, a comforting Bihari classic served with rice or roti.",
+                    price: "₹60-90"
+                }
+            ]
+        },
+
+        
+    ];
+    
+    // Render destination food cards
+    function renderCuisineCards(data = cuisineData) {
+        const grid = document.getElementById('destinationsGrid');
+        grid.innerHTML = '';
+        
+        data.forEach(destination => {
+            const card = document.createElement('div');
+            card.className = 'destination-card';
+            card.setAttribute('data-category', destination.category);
+            
+            const foodItemsHTML = destination.foods.map(food => `
+                <div class="food-item">
+                    <img src="${food.image}" alt="${food.name}" class="food-image">
+                    <div class="food-details">
+                        <div class="food-name">${food.name}</div>
+                        <div class="food-description">${food.description}</div>
+                        <div class="food-price"><i class="fas fa-rupee-sign"></i> ${food.price}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            card.innerHTML = `
+                <div class="destination-header">
+                    <div class="destination-name">${destination.name}</div>
+                    <div class="destination-state">
+                        <i class="fas fa-map-marker-alt"></i>
+                        ${destination.state}
+                    </div>
+                </div>
+                <div class="food-items">
+                    ${foodItemsHTML}
+                </div>
+            `;
+            
+            grid.appendChild(card);
+        });
+    }
+    
+    // Filter functionality
+    function setupFilters() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active button
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Filter data
+                const filter = button.getAttribute('data-filter');
+                let filteredData = cuisineData;
+                
+                if (filter !== 'all') {
+                    filteredData = cuisineData.filter(dest => dest.category === filter);
+                }
+                
+                renderCuisineCards(filteredData);
+            });
+        });
+    }
+    
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+        renderCuisineCards();
+        setupFilters();
+    });
+    </script>
+</body>
+</html>

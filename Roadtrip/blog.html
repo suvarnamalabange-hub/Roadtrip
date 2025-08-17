@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Travel Blog | My Epic Roadtrip: India Edition 2.0</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+    :root {
+        --primary-color: #113b23;
+        --secondary-color: #2a633f;
+        --accent-color: #d4a373;
+        --bg-color: #fdfaf6;
+        --text-color: #333;
+        --card-bg: #ffffff;
+        --shadow-light: rgba(32, 40, 60, 0.12);
+        --shadow-dark: rgba(32, 40, 60, 0.2);
+    }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+    }
+    .navbar {
+        background: var(--primary-color);
+        color: #fff;
+        padding: 16px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .navbar a {
+        color: #fff;
+        text-decoration: none;
+        margin-right: 32px;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+    .navbar a:hover {
+        color: var(--accent-color);
+    }
+    .navbar a:last-child {
+        margin-right: 0;
+    }
+    .main-content {
+        max-width: 1200px;
+        margin: 40px auto 0 auto;
+        padding: 24px;
+    }
+    h2.section-title {
+        font-family: 'Playfair Display', serif;
+        text-align: center;
+        font-size: 2.5em;
+        color: var(--primary-color);
+        margin-bottom: 30px;
+    }
+    .intro-text {
+        text-align: center;
+        font-size: 1.1em;
+        color: var(--secondary-color);
+        margin-bottom: 40px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    /* Filter Section */
+    .filter-section {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    .filter-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+    }
+    .filter-btn {
+        background: #fff;
+        border: 2px solid var(--secondary-color);
+        color: var(--secondary-color);
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .filter-btn.active, .filter-btn:hover {
+        background: var(--secondary-color);
+        color: white;
+    }
+    
+    /* Blog Posts Grid */
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+    
+    /* Blog Card Styles */
+    .blog-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        box-shadow: 0 4px 20px var(--shadow-light);
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .blog-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 32px var(--shadow-dark);
+    }
+    
+    .blog-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .blog-content {
+        padding: 25px;
+    }
+    
+    .blog-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        font-size: 0.9em;
+        color: #666;
+    }
+    
+    .blog-date {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .blog-category {
+        background: var(--accent-color);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 0.8em;
+        font-weight: 600;
+    }
+    
+    .blog-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4em;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 12px;
+        line-height: 1.3;
+    }
+    
+    .blog-excerpt {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+    
+    .read-more {
+        color: var(--secondary-color);
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: color 0.3s;
+    }
+    .read-more:hover {
+        color: var(--primary-color);
+    }
+    
+    /* Featured Post */
+    .featured-post {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 50px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .featured-post::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+    }
+    .featured-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.2em;
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 2;
+    }
+    .featured-excerpt {
+        font-size: 1.1em;
+        opacity: 0.9;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 2;
+    }
+    .featured-btn {
+        background: white;
+        color: var(--primary-color);
+        padding: 12px 30px;
+        border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.3s;
+        position: relative;
+        z-index: 2;
+    }
+    .featured-btn:hover {
+        transform: scale(1.05);
+    }
+    
+    /* Blog Modal */
+    .blog-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.9);
+        z-index: 1000;
+        overflow-y: auto;
+    }
+    .blog-modal.active {
+        display: block;
+    }
+    
+    .modal-content {
+        max-width: 800px;
+        margin: 40px auto;
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .modal-header {
+        position: relative;
+        height: 300px;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: end;
+        padding: 40px;
+    }
+    .modal-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    }
+    
+    .close-modal {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        font-size: 1.5em;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 50%;
+        transition: background 0.3s;
+        z-index: 10;
+    }
+    .close-modal:hover {
+        background: rgba(255,255,255,0.3);
+    }
+    
+    .modal-title {
+        color: white;
+        font-family: 'Playfair Display', serif;
+        font-size: 2.2em;
+        margin: 0;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .modal-body {
+        padding: 40px;
+    }
+    
+    .modal-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        color: #666;
+    }
+    
+    .modal-text {
+        line-height: 1.8;
+        font-size: 1.1em;
+        color: #333;
+    }
+    .modal-text p {
+        margin-bottom: 20px;
+    }
+    
+    /* Stats Section */
+    .trip-stats {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 20px var(--shadow-light);
+    }
+    .stats-title {
+        text-align: center;
+        color: var(--primary-color);
+        font-size: 1.8em;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+    }
+    .stat-item {
+        text-align: center;
+        padding: 20px;
+        border: 2px solid #f0f0f0;
+        border-radius: 15px;
+        transition: border-color 0.3s;
+    }
+    .stat-item:hover {
+        border-color: var(--accent-color);
+    }
+    .stat-number {
+        font-size: 2.5em;
+        font-weight: bold;
+        color: var(--accent-color);
+        margin-bottom: 10px;
+    }
+    .stat-label {
+        color: var(--secondary-color);
+        font-weight: 600;
+    }
+    
+    footer {
+        text-align: center;
+        padding: 20px;
+        margin-top: 40px;
+        background: var(--primary-color);
+        color: #eee;
+    }
+    
+    @media (max-width: 768px) {
+        .main-content { padding: 15px; }
+        .blog-grid { gap: 20px; }
+        .navbar { flex-direction: column; gap: 10px; }
+        .filter-buttons { gap: 8px; }
+        .modal-content { margin: 20px; }
+        .modal-body { padding: 20px; }
+        .featured-post { padding: 25px; }
+        .featured-title { font-size: 1.8em; }
+    }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div><i class="fas fa-route"></i> <b>Epic Roadtrip</b></div>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="photo-gallery.html">Photo Gallery</a>
+            <a href="blog.html">Blog</a>
+            <a href="cuisine.html">Cuisine</a>
+            <a href="emergency.html">Emergency</a>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <h2 class="section-title"><i class="fas fa-pen-fancy"></i> Travel Stories & Experiences</h2>
+        <p class="intro-text">
+            Join me on this incredible journey across India, from the snow-capped peaks of Ladakh to the spiritual ghats of Varanasi. Each destination brought new adventures, challenges, and unforgettable memories.
+        </p>
+        
+        <!-- Trip Statistics -->
+        <section class="trip-stats">
+            <h3 class="stats-title">
+                <i class="fas fa-chart-line"></i>
+                Epic Journey by Numbers
+            </h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">9,247</div>
+                    <div class="stat-label">Kilometers Driven</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">13</div>
+                    <div class="stat-label">Destinations</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">42</div>
+                    <div class="stat-label">Days on Road</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">States Covered</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1,247</div>
+                    <div class="stat-label">Photos Taken</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">18,380</div>
+                    <div class="stat-label">Feet Max Altitude</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Featured Post -->
+        <section class="featured-post">
+            <h3 class="featured-title">The Night Sky of Hanle: A Cosmic Experience</h3>
+            <p class="featured-excerpt">
+                At 14,000 feet above sea level, Hanle offers some of the clearest night skies in the world. My experience at the Indian Astronomical Observatory was nothing short of magical.
+            </p>
+            <button class="featured-btn" onclick="openBlogPost('hanle-night-sky')">
+                Read the Full Story <i class="fas fa-arrow-right"></i>
+            </button>
+        </section>
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Stories</button>
+                <button class="filter-btn" data-filter="Adventure">Adventure</button>
+                <button class="filter-btn" data-filter="Spiritual">Spiritual</button>
+                <button class="filter-btn" data-filter="Culture">Culture</button>
+                <button class="filter-btn" data-filter="Food">Food</button>
+                <button class="filter-btn" data-filter="Tips">Travel Tips</button>
+            </div>
+        </div>
+        
+        <!-- Blog Posts Grid -->
+        <div class="blog-grid" id="blogGrid">
+            <!-- Blog posts will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <!-- Blog Modal -->
+    <div class="blog-modal" id="blogModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeBlogModal()">&times;</button>
+            <div class="modal-header" id="modalHeader">
+                <h2 class="modal-title" id="modalTitle"></h2>
+            </div>
+            <div class="modal-body">
+                <div class="modal-meta">
+                    <span id="modalDate"></span>
+                    <span id="modalCategory"></span>
+                </div>
+                <div class="modal-text" id="modalText"></div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        &copy; 2025 Epic Roadtrips Inc. | Adventure Awaits!
+    </footer>
+    
+    <script>
+    const blogPosts = [
+        {
+            id: 'manali-adventure',
+            title: 'Conquering Rohtang Pass: An Adrenaline Rush',
+            category: 'Adventure',
+            date: 'Day 3 - April 15, 2024',
+            image: 'https://d2rdhxfof4qmbb.cloudfront.net/wp-content/uploads/2024/09/RohtangPass.jpg',
+            excerpt: 'The journey through Rohtang Pass tested both my driving skills and mental strength. Snow, altitude, and breathtaking views made this an unforgettable experience.',
+            content: `
+                <p>Waking up at 4 AM in Manali, I knew today would be special. The drive to Rohtang Pass is legendary among road trip enthusiasts, and experiencing it firsthand was on my bucket list.</p>
+                
+                <p>The initial stretch from Manali was smooth, but as we climbed higher, the air grew thinner and the landscape more dramatic. Snow-capped peaks emerged from the morning mist like ancient guardians.</p>
+                
+                <p>At 13,050 feet above sea level, Rohtang Pass lives up to its name - "Pile of Corpses" in the local language. The weather can change in minutes, and we experienced sunshine, snowfall, and fog within an hour.</p>
+                
+                <p>The most challenging part wasn't the altitude or the cold, but navigating through the crowds of tourists and vehicles. Patience became my greatest virtue as we inched through traffic jams at this altitude.</p>
+                
+                <p><strong>Pro Tip:</strong> Start early (before sunrise), carry oxygen cans, and don't forget to check weather conditions. The pass can close without warning due to heavy snowfall.</p>
+            `
+        },
+        {
+            id: 'ladakh-culture',
+            title: 'Ladakh: Where Buddhism Meets the Himalayas',
+            category: 'Spiritual',
+            date: 'Day 8 - April 20, 2024',
+            image: 'https://stampedmoments.com/wp-content/uploads/2024/10/thiksey-monastery-3.jpg',
+            excerpt: 'The monasteries of Ladakh offer a glimpse into ancient Buddhist traditions. My visit to Thiksey Monastery was a spiritual awakening.',
+            content: `
+                <p>Entering Ladakh felt like stepping into another world. The high-altitude desert landscape, dotted with ancient monasteries, creates an atmosphere of profound spirituality.</p>
+                
+                <p>Thiksey Monastery, perched on a hilltop 19 kilometers from Leh, became my spiritual sanctuary. The morning prayers at 6 AM, accompanied by the haunting sound of long horns, created an atmosphere of pure tranquility.</p>
+                
+                <p>The monks welcomed me with traditional butter tea - an acquired taste that somehow perfectly complemented the thin mountain air. Their simple lifestyle and profound wisdom left a lasting impression.</p>
+                
+                <p>The architecture of these monasteries is a marvel. Built without modern tools, they've stood for centuries against harsh Himalayan winters and summer heat.</p>
+                
+                <p><strong>Cultural Note:</strong> Always walk clockwise around monasteries, remove shoes before entering prayer halls, and photography inside is often restricted. Respect local customs and you'll be warmly welcomed.</p>
+            `
+        },
+        {
+            id: 'hanle-night-sky',
+            title: 'Hanle: A Window to the Universe',
+            category: 'Adventure',
+            date: 'Day 12 - April 24, 2024',
+            image: 'https://en-media.thebetterindia.com/uploads/2019/03/Hanle-Feature-Image-4.jpg',
+            excerpt: 'The Indian Astronomical Observatory at Hanle offers some of the clearest skies on Earth. My night under the stars was transformative.',
+            content: `
+                <p>Hanle, at 14,764 feet, is one of the most remote places I've ever visited. The journey itself is an adventure - rough roads, river crossings, and landscapes that look like another planet.</p>
+                
+                <p>But the real magic happens after sunset. With minimal light pollution and crystal-clear air, the night sky in Hanle is absolutely spectacular. The Milky Way stretches across the sky like a cosmic river.</p>
+                
+                <p>I spent the night at a local homestay, where the family shared stories of life at this extreme altitude. The simplicity of their existence, combined with their warmth, was humbling.</p>
+                
+                <p>The Indian Astronomical Observatory houses one of the world's highest optical telescopes. Though access is restricted, just being near this scientific marvel under such pristine skies was incredible.</p>
+                
+                <p><strong>Photography Tip:</strong> Bring a sturdy tripod and extra batteries (cold drains them fast). The best star photography happens between 10 PM and 4 AM when the sky is darkest.</p>
+            `
+        },
+        {
+            id: 'varanasi-spirituality',
+            title: 'Varanasi: The Eternal City Awakens',
+            category: 'Spiritual',
+            date: 'Day 28 - May 10, 2024',
+            image: 'https://www.thehosteller.com/_next/image/?url=https%3A%2F%2Fstatic.thehosteller.com%2Fhostel%2Fimages%2FCover%20imageeee.jpg%2FCover%20imageeee-1720528885335.jpg&w=2048&q=75',
+            excerpt: 'Witnessing the sunrise over the Ganges in Varanasi was a spiritual experience that words cannot capture. The city that never sleeps welcomed me with open arms.',
+            content: `
+                <p>Varanasi assaults your senses in the most beautiful way. The sound of temple bells, the sight of ancient ghats, the smell of incense mixed with street food - it's overwhelming and magical simultaneously.</p>
+                
+                <p>My day began at 4:30 AM with a boat ride on the sacred Ganges. As the sun rose, the ghats came alive with pilgrims taking holy dips, priests performing rituals, and life unfolding as it has for thousands of years.</p>
+                
+                <p>The evening Ganga Aarti at Dashashwamedh Ghat is a spectacle beyond description. Hundreds of devotees gather as priests perform synchronized prayers with fire lamps, creating a mesmerizing display of faith.</p>
+                
+                <p>Walking through the narrow lanes of old Varanasi is like traveling through time. Every corner has a story, every temple has a legend, and every local has wisdom to share.</p>
+                
+                <p><strong>Cultural Insight:</strong> Varanasi is not just a tourist destination; it's a living, breathing spiritual center. Approach with respect and openness, and the city will reveal its secrets to you.</p>
+            `
+        },
+        {
+            id: 'ladakhi-food',
+            title: 'Flavors of the Himalayas: Ladakhi Cuisine',
+            category: 'Food',
+            date: 'Day 10 - April 22, 2024',
+            image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=400&q=80',
+            excerpt: 'From thukpa to butter tea, Ladakhi cuisine is perfectly adapted to high-altitude living. Every meal tells a story of survival and tradition.',
+            content: `
+                <p>Ladakhi cuisine is a perfect example of how geography shapes food culture. At 11,000+ feet, the growing season is short, and preservation techniques are crucial for survival.</p>
+                
+                <p>Thukpa, a hearty noodle soup, became my favorite comfort food. Rich with vegetables and meat, it provides the calories and warmth needed at high altitude. Every family has their own recipe, passed down through generations.</p>
+                
+                <p>Butter tea (po cha) initially seemed strange - salty tea with yak butter. But after a few days at altitude, I understood its genius. The salt replaces lost electrolytes, and the fat provides energy and warmth.</p>
+                
+                <p>Momos in Ladakh are different from their Tibetan cousins. Filled with local vegetables or yak meat, they're steamed to perfection and served with spicy red chili chutney that could wake the dead.</p>
+                
+                <p><strong>Food Tip:</strong> Always eat freshly cooked food at high altitude. Your digestion slows down, so heavy or old food can cause problems. Drink lots of water and avoid alcohol for the first few days.</p>
+            `
+        },
+        {
+            id: 'mountain-driving-tips',
+            title: 'Mountain Driving Survival Guide',
+            category: 'Tips',
+            date: 'Day 15 - April 27, 2024',
+            image: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80',
+            excerpt: 'Driving in the Himalayas requires skill, patience, and respect for the mountains. Here are my hard-learned lessons from 3,000+ km of mountain roads.',
+            content: `
+                <p>After driving over 3,000 kilometers through the Himalayas, I've learned that mountain driving is an art form. It's not just about skill - it's about reading the mountains, understanding weather, and respecting the terrain.</p>
+                
+                <p><strong>The Golden Rules:</strong></p>
+                <p>1. Always give way to uphill traffic - they need momentum more than you.<br>
+                2. Honk at blind curves - it's not rudeness, it's survival.<br>
+                3. Use engine braking on descents - your brakes will thank you.<br>
+                4. Check weather conditions obsessively - mountains create their own weather.</p>
+                
+                <p>The most dangerous part isn't steep climbs or narrow roads - it's overconfidence. I've seen too many vehicles stuck because drivers underestimated conditions or pushed beyond safe limits.</p>
+                
+                <p>Altitude affects both you and your vehicle. Cars lose power, and humans lose judgment. Take frequent breaks, stay hydrated, and don't drive when you're not feeling well.</p>
+                
+                <p><strong>Emergency Kit Essentials:</strong> Spare tire (obviously), basic tools, tow rope, flashlight, warm clothes, water, and high-energy food. Most importantly - tell someone your route and expected arrival time.</p>
+            `
+        },
+        {
+            id: 'vrindavan-devotion',
+            title: 'Vrindavan: In the Footsteps of Lord Krishna',
+            category: 'Culture',
+            date: 'Day 22 - May 4, 2024',
+            image: 'https://www.tourmyindia.com/blog//wp-content/uploads/2021/06/Famous-Temples-in-Mathura-Vrindavan-Prem-Mandir.jpg',
+            excerpt: 'Vrindavan is where mythology meets reality. The devotion of pilgrims and the town\'s spiritual energy create an atmosphere unlike anywhere else.',
+            content: `
+                <p>Vrindavan doesn't just tell Lord Krishna's stories - it lives them. Every street corner, every temple, every tree seems to whisper tales of divine love and playful miracles.</p>
+                
+                <p>The Banke Bihari temple experience is intense. Thousands of devotees push forward for just a glimpse of the deity, and the curtain opens and closes dramatically throughout the day, creating waves of excitement.</p>
+                
+                <p>But the real magic happens in the smaller temples and ashrams. I spent an evening at an ISKCON ashram, joining in the evening prayers. The collective chanting created a meditative atmosphere that stayed with me long after leaving.</p>
+                
+                <p>The streets come alive during festivals, especially during Holi and Janmashtami. Colors, music, and unbridled joy transform the town into a celebration of divine love.</p>
+                
+                <p><strong>Spiritual Note:</strong> Vrindavan attracts people from all walks of life - from billionaires to beggars, all united in devotion. It's a beautiful reminder of how spirituality transcends social boundaries.</p>
+            `
+        },
+        {
+            id: 'road-trip-reflections',
+            title: '9,000+ km Later: What I Learned',
+            category: 'Tips',
+            date: 'Day 42 - May 24, 2024',
+            image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=400&q=80',
+            excerpt: 'After 42 days and over 9,000 kilometers, my epic road trip taught me lessons about travel, life, and myself that I never expected.',
+            content: `
+                <p>As I write this back home in Latur, the memories of the past 42 days feel both distant and immediate. This journey changed me in ways I'm still discovering.</p>
+                
+                <p><strong>The Unexpected Lessons:</strong></p>
+                <p>Flexibility is more important than planning. My carefully crafted itinerary went out the window on day 3, and the trip became infinitely better because of it.</p>
+                
+                <p>India's diversity is staggering. From Ladakhi Buddhist culture to Varanasi's Hindu spirituality, from Himachali mountain food to UP's street delicacies - every 100 kilometers brought new languages, foods, and ways of life.</p>
+                
+                <p>Kindness is universal. Whether it was a Ladakhi family sharing their home, a mechanic in Rishikesh fixing my car for free, or strangers offering directions - I experienced humanity at its best.</p>
+                
+                <p>The journey matters more than the destination. Some of my best memories aren't from famous places but from roadside dhabas, spontaneous detours, and conversations with fellow travelers.</p>
+                
+                <p><strong>Final Thought:</strong> If you're considering a similar journey, stop considering and start planning. The road is calling, and India is waiting to show you its incredible diversity, beauty, and heart.</p>
+            `
+        }
+    ];
+    
+    // Render blog posts
+    function renderBlogPosts(posts = blogPosts) {
+        const grid = document.getElementById('blogGrid');
+        grid.innerHTML = '';
+        
+        posts.forEach(post => {
+            const card = document.createElement('div');
+            card.className = 'blog-card';
+            card.setAttribute('data-category', post.category);
+            card.onclick = () => openBlogPost(post.id);
+            
+            card.innerHTML = `
+                <img src="${post.image}" alt="${post.title}" class="blog-image">
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span class="blog-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            ${post.date}
+                        </span>
+                        <span class="blog-category">${post.category}</span>
+                    </div>
+                    <h3 class="blog-title">${post.title}</h3>
+                    <p class="blog-excerpt">${post.excerpt}</p>
+                    <a href="#" class="read-more">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            `;
+            
+            grid.appendChild(card);
+        });
+    }
+    
+    // Open blog post modal
+    function openBlogPost(postId) {
+        const post = blogPosts.find(p => p.id === postId);
+        if (!post) return;
+        
+        const modal = document.getElementById('blogModal');
+        const modalHeader = document.getElementById('modalHeader');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDate = document.getElementById('modalDate');
+        const modalCategory = document.getElementById('modalCategory');
+        const modalText = document.getElementById('modalText');
+        
+        // Set background image
+        modalHeader.style.backgroundImage = `url(${post.image})`;
+        
+        // Set content
+        modalTitle.textContent = post.title;
+        modalDate.innerHTML = `<i class="fas fa-calendar-alt"></i> ${post.date}`;
+        modalCategory.innerHTML = `<span class="blog-category">${post.category}</span>`;
+        modalText.innerHTML = post.content;
+        
+        // Show modal
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Close blog modal
+    function closeBlogModal() {
+        const modal = document.getElementById('blogModal');
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+    
+    // Filter functionality
+    function setupFilters() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active button
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Filter posts
+                const filter = button.getAttribute('data-filter');
+                let filteredPosts = blogPosts;
+                
+                if (filter !== 'all') {
+                    filteredPosts = blogPosts.filter(post => post.category === filter);
+                }
+                
+                renderBlogPosts(filteredPosts);
+            });
+        });
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('blogModal').addEventListener('click', (e) => {
+        if (e.target.id === 'blogModal') {
+            closeBlogModal();
+        }
+    });
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeBlogModal();
+        }
+    });
+    
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+        renderBlogPosts();
+        setupFilters();
+    });
+    </script>
+</body>
+</html>
