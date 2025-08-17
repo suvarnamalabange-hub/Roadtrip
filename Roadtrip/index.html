@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Epic Roadtrip: India Edition 2.0</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <style>
+        :root {
+            --primary-color: #113b23;
+            --secondary-color: #2a633f;
+            --accent-color: #d4a373;
+            --bg-color: #fdfaf6;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --shadow-light: rgba(32, 40, 60, 0.12);
+            --shadow-dark: rgba(32, 40, 60, 0.2);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            scroll-behavior: smooth;
+        }
+
+        /* --- Preloader --- */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e0e0e0;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- Header & Hero Section with Video Background --- */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+            overflow: hidden;
+        }
+
+        /* Video Background Styles */
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        /* Fallback image for when video doesn't load */
+        .hero-image-fallback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1599145903224-8a6bc6664057?q=80&w=2070&auto=format&fit=crop') no-repeat center center;
+            background-size: cover;
+            z-index: -3;
+        }
+
+        /* Dark overlay for better text readability */
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4em;
+            margin: 0 0 20px 0;
+            text-shadow: 3px 3px 12px rgba(0,0,0,0.8);
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            margin: 0;
+            max-width: 600px;
+            line-height: 1.6;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+            animation: fadeInUp 1.2s ease-out 0.3s both;
+        }
+
+        /* Video control button */
+        .video-controls {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            z-index: 2;
+        }
+
+        .video-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .video-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroll down indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            text-align: center;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator i {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .scroll-indicator p {
+            font-size: 0.9em;
+            margin: 0;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        .main-content {
+            padding: 40px 30px;
+        }
+        
+        h2.section-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        /* --- Filters & Search --- */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .search-bar {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            width: 280px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .search-bar:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 8px rgba(42, 99, 63, 0.2);
+        }
+        .filter-buttons button {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 8px 18px;
+            margin: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-color);
+            transition: background 0.3s, color 0.3s;
+        }
+        .filter-buttons button.active, .filter-buttons button:hover {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        /* --- Gallery & Cards --- */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 40px;
+        }
+        .card {
+            background: var(--card-bg);
+            box-shadow: 0 4px 20px var(--shadow-light);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 32px var(--shadow-dark);
+        }
+        .card-image-container {
+            width: 100%;
+            height: 180px;
+            position: relative;
+        }
+        .card-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .card-content {
+            padding: 16px;
+            text-align: left;
+            flex-grow: 1;
+        }
+        .card-title {
+            font-weight: bold;
+            font-size: 1.25em;
+            color: var(--primary-color);
+            margin: 0;
+        }
+        .card-state {
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 4px;
+        }
+        .card-state i {
+            margin-right: 5px;
+            color: var(--accent-color);
+        }
+
+        /* --- Generic Content Box Style --- */
+        .content-container {
+            max-width: 800px;
+            margin: 60px auto 0 auto;
+        }
+        .content-box {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px var(--shadow-light);
+        }
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        .content-category h3 {
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 8px;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+        }
+        .content-category h3 i {
+            margin-right: 10px;
+        }
+        .content-category ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .content-category li {
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        .content-category li i {
+            color: var(--primary-color);
+            margin-right: 10px;
+            width: 1.2em;
+            text-align: center;
+        }
+
+        /* --- Road Trip Guide Accordion --- */
+        .accordion-item {
+            background: var(--card-bg);
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px var(--shadow-light);
+            overflow: hidden;
+        }
+        .accordion-header {
+            background: var(--secondary-color);
+            color: white;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .accordion-header h3 {
+            margin: 0;
+            font-size: 1.1em;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 20px;
+        }
+        .accordion-content .content-inner {
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+        }
+        .accordion-content p { margin: 0 0 10px 0; line-height: 1.6; }
+        .accordion-content p strong { color: var(--primary-color); }
+        .accordion-item.active .accordion-content {
+            max-height: 500px;
+        }
+        
+        /* --- Budget Guide Specifics --- */
+        .budget-breakdown p {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            font-size: 1.1em;
+        }
+         .budget-breakdown p:last-child {
+            border-bottom: none;
+        }
+        .budget-breakdown i {
+            margin-right: 15px;
+            color: var(--secondary-color);
+            width: 20px;
+        }
+        .budget-breakdown span {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-left: auto;
+        }
+        .budget-total {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border-left: 5px solid var(--accent-color);
+        }
+        .budget-total h4 { margin: 0 0 10px 0; color: var(--primary-color); }
+        .budget-total p { margin: 5px 0 0 0; line-height: 1.6; }
+
+        /* --- Map Section --- */
+        #map {
+            height: 500px;
+            width: 100%;
+            margin-top: 60px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px var(--shadow-dark);
+        }
+        
+        /* --- Modal Styles --- */
+        .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-bg.show { display: flex; opacity: 1; }
+        .modal-content { background: var(--card-bg); border-radius: 12px; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(15,23,42,0.33); position: relative; transform: scale(0.9); transition: transform 0.3s ease; max-height: 90vh; overflow-y: auto; }
+        .modal-bg.show .modal-content { transform: scale(1); }
+        .modal-header { padding: 20px; border-bottom: 1px solid #eee; }
+        .close-btn { position: absolute; right: 18px; top: 14px; font-size: 28px; background: none; border: none; cursor: pointer; color: #888; line-height: 1; }
+        .modal-body { padding: 20px; text-align: center; }
+        .modal-image { width: 100%; border-radius: 12px; margin-bottom: 18px; object-fit: cover; max-height: 250px; }
+        .modal-title { font-size: 1.7em; font-weight: bold; color: var(--primary-color); margin-bottom: 10px; }
+        .modal-info-grid { display: grid; grid-template-columns: 1fr; gap: 15px; text-align: left; margin-top: 20px; }
+        .modal-info-item { background: #f9f9f9; padding: 12px; border-radius: 8px; border-left: 4px solid var(--accent-color); }
+        .modal-info-item h4 { margin: 0 0 5px 0; color: var(--secondary-color); font-size: 1em; }
+        .modal-info-item p { margin: 0; font-size: 0.95em; color: #555; line-height: 1.5; }
+        
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            background: var(--primary-color);
+            color: #eee;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.8em; }
+            .hero p { font-size: 1.1em; }
+            .main-content { padding: 30px 15px; }
+            .controls { flex-direction: column; }
+            h2.section-title { font-size: 2em; }
+            .video-controls { bottom: 20px; right: 20px; }
+            .scroll-indicator { bottom: 80px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 2.2em; }
+            .hero p { font-size: 1em; padding: 0 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader"><div class="spinner"></div></div>
+    
+    <header class="hero">
+        <!-- Video Background -->
+        <video id="heroVideo" class="hero-video" autoplay muted loop playsinline>
+            <source src="https://videos.pexels.com/video-files/4319761/4319761-uhd_2560_1440_30fps.mp4" type="video/mp4">
+            <!-- Fallback video source -->
+            <source src="https://cdn.pixabay.com/vimeo/377434906/traffic-30606.mp4?width=1920&hash=a2ca0c2df6e9be3c7ff9a36985c79ad7b49f9b8d" type="video/mp4">
+        </video>
+        
+        <!-- Fallback background image -->
+        <div class="hero-image-fallback"></div>
+        
+        <!-- Dark overlay -->
+        <div class="hero-overlay"></div>
+        
+        <!-- Video control button -->
+        <div class="video-controls">
+            <button id="videoToggle" class="video-toggle" title="Play/Pause Video">
+                <i class="fas fa-pause"></i>
+            </button>
+        </div>
+        
+        <!-- Hero content -->
+        <div class="hero-content">
+            <h1>My Epic Roadtrip</h1>
+            <p>An unforgettable journey through the heart of India, from the majestic Himalayas to sacred riverbanks, covering 9,000+ km of diverse landscapes and spiritual destinations.</p>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+            <p>Scroll to explore</p>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section id="destinations">
+            <h2 class="section-title">Destinations Gallery</h2>
+            <div class="controls">
+                <input type="text" id="searchBar" class="search-bar" placeholder="Search for a destination...">
+                <div class="filter-buttons" id="filterButtons">
+                    <button class="active" data-filter="all">All</button>
+                    <button data-filter="Spiritual">Spiritual</button>
+                    <button data-filter="Mountains">Mountains</button>
+                    <button data-filter="Historic">Historic</button>
+                    <button data-filter="Unique">Unique</button>
+                </div>
+            </div>
+            <div class="gallery" id="gallery"></div>
+        </section>
+
+        <section id="trip-guide" class="content-container">
+            <h2 class="section-title">Road Trip Guide</h2>
+            <div id="accordion"></div>
+        </section>
+        
+        <section id="essential-checklist" class="content-container">
+             <div class="content-box">
+                <h2 class="section-title">Essential Road Trip Checklist</h2>
+                <div class="content-grid">
+                    <div class="content-category">
+                        <h3><i class="fas fa-car"></i> Vehicle Essentials</h3>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Spare Tyre & Puncture Kit</li>
+                            <li><i class="fas fa-check-circle"></i> Jumper Cables & Tow Rope</li>
+                            <li><i class="fas fa-check-circle"></i> Coolant & Engine Oil</li>
+                            <li><i class="fas fa-check-circle"></i> Basic Toolkit (Wrenches, etc.)</li>
+                            <li><i class="fas fa-check-circle"></i> Jerry Can for extra fuel (for Ladakh)</li>
+                        </ul>
+                    </div>
+                    <div class="content-category">
+                        <h3><i class="fas fa-file-alt"></i> Documents & Finances</h3>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> RC, License, PUC, Insurance</li>
+                            <li><i class="fas fa-check-circle"></i> Inner Line Permits (for Ladakh)</li>
+                            <li><i class="fas fa-check-circle"></i> ID Proof (Aadhaar, etc.)</li>
+                            <li><i class="fas fa-check-circle"></i> Cash (for remote areas)</li>
+                            <li><i class="fas fa-check-circle"></i> FASTag for tolls</li>
+                        </ul>
+                    </div>
+                    <div class="content-category">
+                        <h3><i class="fas fa-tshirt"></i> Personal Items & Clothing</h3>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Layered Clothing (Thermals, Fleece)</li>
+                            <li><i class="fas fa-check-circle"></i> Rain Gear & Windcheater</li>
+                            <li><i class="fas fa-check-circle"></i> Comfortable Shoes/Boots</li>
+                            <li><i class="fas fa-check-circle"></i> Sunscreen, Sunglasses & Hat</li>
+                            <li><i class="fas fa-check-circle"></i> Basic Toiletries</li>
+                        </ul>
+                    </div>
+                    <div class="content-category">
+                        <h3><i class="fas fa-first-aid"></i> Health & Safety</h3>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> First-Aid Kit with essentials</li>
+                            <li><i class="fas fa-check-circle"></i> Altitude Sickness Medicine</li>
+                            <li><i class="fas fa-check-circle"></i> Pain Relievers & Antiseptics</li>
+                            <li><i class="fas fa-check-circle"></i> Hand Sanitizer & Masks</li>
+                            <li><i class="fas fa-check-circle"></i> High-energy snacks & Water</li>
+                        </ul>
+                    </div>
+                     <div class="content-category">
+                        <h3><i class="fas fa-mobile-alt"></i> Tech & Gadgets</h3>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Power Bank & Car Charger</li>
+                            <li><i class="fas fa-check-circle"></i> Offline Maps (e.g., Google Maps)</li>
+                            <li><i class="fas fa-check-circle"></i> Phone Mount for car</li>
+                            <li><i class="fas fa-check-circle"></i> Camera & Extra Batteries</li>
+                             <li><i class="fas fa-check-circle"></i> Postpaid SIM (better connectivity)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="safety-guide" class="content-container">
+            <div class="content-box">
+                <h2 class="section-title">Traveler's Code: Safety & Etiquette</h2>
+                <div class="content-grid">
+                    <div class="content-category">
+                        <h3><i class="fas fa-road"></i> Mountain Driving</h3>
+                        <ul>
+                            <li><i class="fas fa-exclamation-triangle"></i> Avoid driving at night</li>
+                            <li><i class="fas fa-volume-up"></i> Honk on blind curves</li>
+                            <li><i class="fas fa-arrow-up"></i> Give way to uphill traffic</li>
+                            <li><i class="fas fa-car-crash"></i> Check brakes frequently</li>
+                        </ul>
+                    </div>
+                    <div class="content-category">
+                        <h3><i class="fas fa-praying-hands"></i> Cultural Etiquette</h3>
+                        <ul>
+                            <li><i class="fas fa-user-secret"></i> Dress modestly at temples</li>
+                            <li><i class="fas fa-shoe-prints"></i> Remove footwear before entry</li>
+                            <li><i class="fas fa-camera"></i> Ask before photographing people</li>
+                            <li><i class="fas fa-comment-slash"></i> Respect rituals & silence</li>
+                        </ul>
+                    </div>
+                    <div class="content-category">
+                        <h3><i class="fas fa-heartbeat"></i> General Health</h3>
+                        <ul>
+                            <li><i class="fas fa-tint"></i> Stay hydrated always</li>
+                            <li><i class="fas fa-utensils"></i> Eat at busy, clean places</li>
+                            <li><i class="fas fa-user-shield"></i> Be aware of your surroundings</li>
+                            <li><i class="fas fa-phone-alt"></i> Keep emergency contacts handy</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="budget-guide" class="content-container">
+            <div class="content-box">
+                <h2 class="section-title">The Financial Roadmap: Budget Guide</h2>
+                <p style="text-align:center; margin-top:-20px; margin-bottom: 30px;">Estimates are per person for the entire ~40-day trip. Costs can vary widely.</p>
+                <div class="budget-breakdown">
+                    <p><i class="fas fa-gas-pump"></i> Fuel (~9,000 km) <span>₹ 75,000 - ₹ 85,000</span></p>
+                    <p><i class="fas fa-hotel"></i> Accommodation (40 nights) <span>₹ 40,000 - ₹ 1,20,000+</span></p>
+                    <p><i class="fas fa-utensils"></i> Food & Water (40 days) <span>₹ 25,000 - ₹ 60,000+</span></p>
+                    <p><i class="fas fa-ticket-alt"></i> Permits, Tolls & Misc. <span>₹ 10,000 - ₹ 15,000</span></p>
+                </div>
+                <div class="budget-total">
+                    <h4>Total Estimated Cost Per Person:</h4>
+                    <p><b>Budget Traveler:</b> ₹ 1,50,000 - ₹ 1,80,000</p>
+                    <p><b>Mid-Range Traveler:</b> ₹ 2,00,000 - ₹ 2,50,000</p>
+                    <p><b>Comfort Traveler:</b> ₹ 3,00,000+</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="trip-map" class="content-container">
+            <h2 class="section-title">Trip Map</h2>
+            <div id="map"></div>
+        </section>
+    </main>
+    
+    <div class="modal-bg" id="modalBg">
+        <div class="modal-content" id="modalContent">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle"></h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img class="modal-image" id="modalImg" src="" alt="">
+                <div class="modal-info-grid">
+                    <div class="modal-info-item"><h4><i class="fas fa-info-circle"></i> Description</h4><p id="modalDesc"></p></div>
+                    <div class="modal-info-item"><h4><i class="fas fa-calendar-alt"></i> Best Time to Visit</h4><p id="modalBestTime"></p></div>
+                    <div class="modal-info-item"><h4><i class="fas fa-lightbulb"></i> Pro Tip</h4><p id="modalTip"></p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer><p>&copy; 2025 Epic Roadtrips Inc. | Adventure Awaits!</p></footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Video control functionality
+        const video = document.getElementById('heroVideo');
+        const videoToggle = document.getElementById('videoToggle');
+        const videoIcon = videoToggle.querySelector('i');
+
+        // Handle video play/pause toggle
+        videoToggle.addEventListener('click', () => {
+            if (video.paused) {
+                video.play();
+                videoIcon.className = 'fas fa-pause';
+                videoToggle.title = 'Pause Video';
+            } else {
+                video.pause();
+                videoIcon.className = 'fas fa-play';
+                videoToggle.title = 'Play Video';
+            }
+        });
+
+        // Handle video loading errors
+        video.addEventListener('error', (e) => {
+            console.log('Video failed to load, using fallback background image');
+            video.style.display = 'none';
+        });
+
+        // Ensure video is muted for autoplay to work
+        video.muted = true;
+
+        const locations = [
+            { name: "Latur", state: "Maharashtra", category: "Historic", img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0b/47/d7/c8/night-view.jpg?w=600&h=-1&s=1", desc: "A city rich in history, famous for temples like Siddheshwar and Ashtavinayak, ancient forts (Ausa, Udgir), and bustling Golai market.", bestTime: "October to February", tip: "Explore the Kharosa Caves, a complex of 12 ancient Buddhist caves dating back to the 6th century.", coords: [18.4088, 76.5604] },
+            { name: "Manali", state: "Himachal Pradesh", category: "Mountains", img: "https://t3.ftcdn.net/jpg/01/95/88/12/360_F_195881213_oJTdvdKp1g5vzyt8XJ7o4GYKnAD8Q0o4.jpg", desc: "A Himalayan town in Himachal Pradesh known for adventure (Solang Valley, Rohtang Pass), temples (Hadimba), and scenic beauty.", bestTime: "March to June, October to February", tip: "Rent a bike to explore the surrounding valleys of Solang and Sethan for breathtaking views away from the crowds.", coords: [32.2432, 77.1892] },
+            { name: "Ladakh", state: "Ladakh", category: "Mountains", img: "https://www.urbanyatra.com/wp-content/uploads/2024/08/HD-wallpaper-mountain-reflection-ladakh-birds-beautiful-clouds-lake-india-mountains-prairie-reflection-field-himalayas.jpg", desc: "An iconic region with high-altitude desert, majestic monasteries (e.g., Thiksey), lakes like Pangong Tso, and dramatic mountain landscapes.", bestTime: "April to July", tip: "Acclimatize for at least 48 hours in Leh before venturing to higher altitudes to avoid sickness.", coords: [34.1526, 77.5771] },
+            { name: "Hanle", state: "Ladakh", category: "Unique", img: "https://c4.wallpaperflare.com/wallpaper/191/678/498/stars-night-the-milky-way-the-monastery-wallpaper-thumb.jpg", desc: "A remote Ladakhi village home to the world's highest observatory, Hanle Monastery, pristine night skies, and serene isolation.", bestTime: "May to September", tip: "Visit on a new moon night for the best stargazing experience at the Indian Astronomical Observatory.", coords: [32.7725, 78.9809] },
+            { name: "Rishikesh", state: "Uttarakhand", category: "Spiritual", img: "https://t3.ftcdn.net/jpg/04/54/95/42/360_F_454954235_UNfPLwwOIvzOPaCJ6W9MF1KAtdNkdAnM.jpg", desc: "Yoga capital of the world on the banks of Ganga. Visit Ram & Laxman Jhula, Triveni Ghat, ashrams, and try white-water rafting.", bestTime: "September to June", tip: "Don't miss the evening Ganga Aarti at Triveni Ghat for a mesmerizing spiritual experience.", coords: [30.0869, 78.2676] },
+            { name: "Sonprayag", state: "Uttarakhand", category: "Spiritual", img: "https://www.shutterstock.com/shutterstock/videos/3399139685/thumb/1.jpg?ip=x480", desc: "Scenic village at the confluence of Mandakini and Basuki rivers, a gateway to Kedarnath, famous for spiritual & natural beauty.", bestTime: "May to June, September to October", tip: "This is the last motorable point for the Kedarnath trek. Arrive early to avoid the rush for shared taxis to Gaurikund.", coords: [30.6385, 79.0204] },
+            { name: "Vrindavan", state: "Uttar Pradesh", category: "Spiritual", img: "https://t3.ftcdn.net/jpg/07/89/04/28/360_F_789042827_c5IIzpt9I1fwryfsCIDGV71uJ6V9FyRa.jpg", desc: "A sacred town associated with Lord Krishna, dotted with spectacular temples — Banke Bihari, Prem Mandir, ISKCON, and lively ghats.", bestTime: "October to March", tip: "Visit the Banke Bihari Temple during the morning 'darshan' for an incredibly vibrant and energetic atmosphere.", coords: [27.5721, 77.6979] },
+            { name: "Ayodhya", state: "Uttar Pradesh", category: "Spiritual", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6VHB6hD2dC1N_WtGStsIMC_4UMbXzBdt2qg&s", desc: "Historic city revered as Lord Rama's birthplace. Visit the grand Ram Mandir, Hanuman Garhi, and other ancient shrines on the Sarayu riverbank.", bestTime: "October to March", tip: "Explore Kanak Bhawan, a beautiful temple said to be a gift to Sita from her mother-in-law Kaikeyi.", coords: [26.7953, 82.1942] },
+            { name: "Prayagraj", state: "Uttar Pradesh", category: "Spiritual", img: "https://media.istockphoto.com/id/1186151353/photo/kumbh-scenes-at-prayagraj.jpg?s=612x612&w=0&k=20&c=_miOMiPHp4tcfpqnibT-T0a7Suw-nFD6HzKg8XCAR8E=", desc: "Sacred city at the Triveni Sangam (Ganga, Yamuna, Saraswati rivers), venue for the Kumbh Mela, with forts and grand colonial landmarks.", bestTime: "October to March", tip: "Take a boat to the Triveni Sangam, the confluence point, for a holy dip, especially during sunrise.", coords: [25.4358, 81.8463] },
+            { name: "Varanasi", state: "Uttar Pradesh", category: "Spiritual", img: "https://t4.ftcdn.net/jpg/00/14/92/13/360_F_14921374_cxnqH33QN7vKSTDyvrNZRCHqyWXiBBWd.jpg", desc: "India's spiritual heart, famous for ghats (Dashashwamedh, Assi), Kashi Vishwanath temple, Ganga aarti, and ancient culture.", bestTime: "October to March", tip: "Take a sunrise boat ride on the Ganges to witness the city's ancient rituals and life along the ghats.", coords: [25.3176, 82.9739] },
+            { name: "Gaya", state: "Bihar", category: "Spiritual", img: "https://media.istockphoto.com/id/618355052/photo/mahabodhi-temple-bodh-gaya-india.jpg?s=612x612&w=0&k=20&c=KF732WEK2FfzQqBdr64blyklhxL3C5GmTioNNvEMgmo=", desc: "Major pilgrimage site for Hindus and Buddhists. Visit the Vishnupad Temple, historic hills, and Mahabodhi Temple in nearby Bodhgaya.", bestTime: "October to March", tip: "Visit Bodh Gaya nearby, where Buddha attained enlightenment. The Mahabodhi Temple is a UNESCO World Heritage Site.", coords: [24.7954, 85.0076] },
+            { name: "Chitrakoot", state: "Uttar Pradesh", category: "Spiritual", img: "https://www.thekumbhyatra.com/wp-content/uploads/2025/04/chitrakoot.webp", desc: "Mythical forest city — Ramghat (Mandakini river), Kamadgiri Hill, Bharat Milap temple; renowned for its Ramayana connection.", bestTime: "July to March", tip: "Perform the 'parikrama' (circumambulation) of Kamadgiri hill, which is believed to fulfill wishes.", coords: [25.1763, 80.8651] },
+            { name: "Omkareshwar", state: "Madhya Pradesh", category: "Spiritual", img: "https://t4.ftcdn.net/jpg/01/92/74/63/360_F_192746386_UVb3pzKsNKjhg9YDWqMkm32nGXV3BEEW.jpg", desc: "Temple town on the Narmada, home to Omkareshwar Jyotirlinga, splendid ghats, and an island shaped like the 'Om' symbol.", bestTime: "October to March", tip: "Take the 'parikrama' boat ride around the Om-shaped island for a complete pilgrimage and stunning views.", coords: [22.2469, 76.1488] }
+        ];
+
+        const roadTripGuide = [
+            { from: "Latur", to: "Manali", distance: "Approx. 1,800 km", time: "Approx. 35-40 hours", route: "Via NH 44 through Nagpur, Jhansi, and Delhi. This is a multi-day drive.", tip: "This is the longest leg. Plan for at least two overnight stops, perhaps in Sagar and Delhi, to stay refreshed. Start very early to avoid city traffic." },
+            { from: "Manali", to: "Ladakh (Leh)", distance: "Approx. 475 km", time: "Approx. 12-15 hours (spread over 2 days)", route: "Manali-Leh Highway via Rohtang/Atal Tunnel, Jispa, and Sarchu.", tip: "Crucial to split this journey. Stop overnight in Jispa or Sarchu to acclimatize to the high altitude. Carry medications for altitude sickness." },
+            { from: "Ladakh (Leh)", to: "Hanle", distance: "Approx. 255 km", time: "Approx. 6-7 hours", route: "Via Upshi, Chumathang, and Nyoma. Requires an Inner Line Permit.", tip: "Ensure your vehicle has high ground clearance. Fuel up in Leh as there are no pumps en route. The journey offers stunning, stark landscapes." },
+            { from: "Hanle", to: "Rishikesh", distance: "Approx. 1,100 km", time: "Approx. 25-30 hours", route: "Back towards Manali, then south via NH 44 and NH 7. Requires overnight stops.", tip: "After the remote beauty of Hanle, this drive brings you back to the plains. Plan stops in places like Mandi or Chandigarh." },
+            { from: "Rishikesh", to: "Sonprayag", distance: "Approx. 210 km", time: "Approx. 7-8 hours", route: "Via NH 7 through Devprayag and Rudraprayag.", tip: "The road is mountainous and prone to landslides during monsoon. Check weather conditions before you leave and avoid driving after dark." },
+            { from: "Sonprayag", to: "Vrindavan", distance: "Approx. 550 km", time: "Approx. 11-12 hours", route: "South via NH 7, then onto NH 19 and the Yamuna Expressway.", tip: "Start early from the hills. Once you hit the plains, the drive is smooth. Be prepared for traffic as you approach Mathura-Vrindavan." },
+            { from: "Vrindavan", to: "Ayodhya", distance: "Approx. 500 km", time: "Approx. 7-8 hours", route: "Via Agra-Lucknow Expressway and Purvanchal Expressway.", tip: "This is a very fast and smooth drive thanks to the expressways. A great opportunity to cover distance quickly and comfortably." },
+            { from: "Ayodhya", to: "Prayagraj", distance: "Approx. 170 km", time: "Approx. 3-4 hours", route: "A straightforward drive south via NH 330.", tip: "A short drive, perfect for a relaxed start. You can explore Ayodhya in the morning and reach Prayagraj by afternoon." },
+            { from: "Prayagraj", to: "Varanasi", distance: "Approx. 125 km", time: "Approx. 2-3 hours", route: "East on the well-maintained NH 19.", tip: "Another short and easy leg. The road is excellent. You'll have plenty of time to check in and witness the evening Ganga Aarti in Varanasi." },
+            { from: "Varanasi", to: "Gaya", distance: "Approx. 250 km", time: "Approx. 5-6 hours", route: "Via NH 19 (Grand Trunk Road).", tip: "The road is generally good but can have heavy traffic. Watch out for trucks. Don't forget to visit Bodhgaya, just a few kilometers from Gaya." },
+            { from: "Gaya", to: "Chitrakoot", distance: "Approx. 380 km", time: "Approx. 8-9 hours", route: "West via NH 19, turning south after Prayagraj.", tip: "This route takes you back through Prayagraj. The roads in this region can be variable, so be prepared for some slower sections." },
+            { from: "Chitrakoot", to: "Omkareshwar", distance: "Approx. 600 km", time: "Approx. 12-13 hours", route: "Via NH 39 and NH 52. A long day of driving.", tip: "Break this journey with a stop if possible. The drive through Madhya Pradesh is scenic. Ensure your GPS is active as rural routes can be confusing." },
+            { from: "Omkareshwar", to: "Latur", distance: "Approx. 550 km", time: "Approx. 11-12 hours", route: "Via Indore, Aurangabad, and Beed.", tip: "The final leg of your epic journey! Stop at the Ellora Caves near Aurangabad if time permits—a spectacular UNESCO World Heritage site." },
+        ];
+
+        const gallery = document.getElementById('gallery');
+        const modalBg = document.getElementById('modalBg');
+        const searchBar = document.getElementById('searchBar');
+        const filterButtonsContainer = document.getElementById('filterButtons');
+        const accordionContainer = document.getElementById('accordion');
+        let map;
+
+        function renderGallery(locationArray) {
+            gallery.innerHTML = '';
+            locationArray.forEach(loc => {
+                const originalIndex = locations.findIndex(originalLoc => originalLoc.name === loc.name);
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `<div class="card-image-container"><img src="${loc.img}" alt="${loc.name}"></div><div class="card-content"><h3 class="card-title">${loc.name}</h3><p class="card-state"><i class="fas fa-map-marker-alt"></i>${loc.state}</p></div>`;
+                card.onclick = () => showModal(originalIndex);
+                gallery.appendChild(card);
+            });
+        }
+
+        function renderGuide() {
+            roadTripGuide.forEach(leg => {
+                const item = document.createElement('div');
+                item.className = 'accordion-item';
+                item.innerHTML = `<div class="accordion-header"><h3>${leg.from} <i class="fas fa-arrow-right"></i> ${leg.to}</h3><i class="fas fa-chevron-down"></i></div><div class="accordion-content"><div class="content-inner"><p><strong>Distance & Time:</strong> ${leg.distance} / ${leg.time}</p><p><strong>Route Highlights:</strong> ${leg.route}</p><p><strong><i class="fas fa-lightbulb"></i> Pro Tip:</strong> ${leg.tip}</p></div></div>`;
+                accordionContainer.appendChild(item);
+            });
+        }
+
+        function showModal(idx) {
+            const loc = locations[idx];
+            document.getElementById('modalImg').src = loc.img;
+            document.getElementById('modalTitle').textContent = loc.name;
+            document.getElementById('modalDesc').textContent = loc.desc;
+            document.getElementById('modalBestTime').textContent = loc.bestTime;
+            document.getElementById('modalTip').textContent = loc.tip;
+            modalBg.classList.add('show');
+        }
+
+        window.closeModal = function() { modalBg.classList.remove('show'); }
+        modalBg.onclick = function(e) { if (e.target === this) closeModal(); };
+        
+        function initializeMap() {
+            map = L.map('map').setView([24.5937, 80.9629], 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
+            const latlngs = locations.map(loc => loc.coords);
+            latlngs.push(locations[0].coords);
+            const polyline = L.polyline(latlngs, {color: 'var(--secondary-color)', weight: 3}).addTo(map);
+            map.fitBounds(polyline.getBounds().pad(0.1));
+            locations.forEach((loc, idx) => {
+                const marker = L.marker(loc.coords).addTo(map);
+                marker.bindPopup(`<b>${idx + 1}. ${loc.name}</b><br>${loc.state}`);
+                marker.on('click', () => showModal(idx));
+            });
+        }
+
+        function handleFilterAndSearch() {
+            const searchTerm = searchBar.value.toLowerCase();
+            const activeFilter = document.querySelector('.filter-buttons button.active').dataset.filter;
+            let filteredLocations = locations.filter(loc => {
+                const nameMatch = loc.name.toLowerCase().includes(searchTerm);
+                const categoryMatch = (activeFilter === 'all' || loc.category === activeFilter);
+                return nameMatch && categoryMatch;
+            });
+            renderGallery(filteredLocations);
+        }
+
+        searchBar.addEventListener('input', handleFilterAndSearch);
+        filterButtonsContainer.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                document.querySelector('.filter-buttons button.active').classList.remove('active');
+                e.target.classList.add('active');
+                handleFilterAndSearch();
+            }
+        });
+        accordionContainer.addEventListener('click', (e) => {
+            const header = e.target.closest('.accordion-header');
+            if (header) {
+                header.parentElement.classList.toggle('active');
+            }
+        });
+
+        renderGallery(locations);
+        renderGuide();
+        initializeMap();
+    });
+
+    window.onload = function() {
+        document.getElementById('preloader').style.opacity = '0';
+        setTimeout(() => { document.getElementById('preloader').style.display = 'none'; }, 500);
+    };
+    </script>
+</body>
+</html>
